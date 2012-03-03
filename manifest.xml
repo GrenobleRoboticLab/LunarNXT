@@ -1,0 +1,16 @@
+<package>
+  <description brief="lunarNXT">
+
+     lunarNXT
+
+  </description>
+  <author>supinfo</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/lunarNXT</url>
+  <depend package="roscpp"/>
+  <depend package="nxt_ros"/>
+
+</package>
+
+
