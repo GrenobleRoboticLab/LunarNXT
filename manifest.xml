@@ -7,7 +7,7 @@
   <author>supinfo</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/lunarNXT</url>
+  <url></url>
   <depend package="roscpp"/>
   <depend package="nxt_ros"/>
 
