@@ -12,11 +12,16 @@ private:
 
 public:
 	MoveManager(Motor* leftMotor, Motor* rightMotor);
+	
 	void linearMove(float effort);
+	void linearMove(float effort, int cm);
+	
 	void turnLeft(float effort);
 	void turnRight(float effort);
 	void boostLeft(float effort);
 	void boostRight(float effort);
+	
+	
 	void effortDispatcher(float leftEffort, float rightEffort);
 };
 

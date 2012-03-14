@@ -29,19 +29,29 @@ float EnvironmentController::distanceToSomething() {
 }
 
 void EnvironmentController::rotateColorSensor(){
+	ROS_INFO("START POS = %f", this->colorMotor->getLastPos());
+        ROS_INFO("END POS = %f", this->colorMotor->getLastPos() + 90);
 	if(colorVertical){
+		this->colorMotor->giveOrder(0.7, this->colorMotor->getLastPos() + 6.28);
+		this->colorVertical = false;
+	/*
 		this->colorMotor->motorManager(0.7);
 		ros::Duration turn(1.0);
 		turn.sleep();
 		this->colorMotor->motorManager(0);
 		colorVertical = false;
+	*/
 	}
 	else{
+		this->colorMotor->giveOrder(-0.7, this->colorMotor->getLastPos() - 6.28);
+		this->colorVertical = true;
+	/*
 		this->colorMotor->motorManager(-0.7);
 		ros::Duration turn(1.0);
 		turn.sleep();
 		this->colorMotor->motorManager(0);
 		colorVertical = true;
+	*/
 	}
 }
 

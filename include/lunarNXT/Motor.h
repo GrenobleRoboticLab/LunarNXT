@@ -11,10 +11,15 @@ private:
 	sensor_msgs::JointState lastMsg;
 	ros::Publisher publisher;
 	void motorCallback(const sensor_msgs::JointState::ConstPtr& msg);
+	bool asOrder;
+	float endPos;
 
 public:
 	Motor(ros::NodeHandle n, std::string name);
+	
 	void motorManager(float effort);
+	
+	void giveOrder(float effort, float endPos);
 	sensor_msgs::JointState getLastMsg();
 	float getLastPos();
 	float getLastVel();
