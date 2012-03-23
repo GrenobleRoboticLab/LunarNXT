@@ -17,7 +17,7 @@ public:
 };
 
 LunarNXT::LunarNXT() {
-	ros::Publisher pub = this->n.advertise<nxt_msgs::JointCommand>("joint_command", 5);
+	ros::Publisher pub = this->n.advertise<lunarNXT::JointCommand>("joint_command", 5);
 	this->mm = MoveMgr(pub, "motor_l", "motor_r");
 	this->ea = EnvAnalyser(&this->mm);
 

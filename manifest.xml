@@ -10,6 +10,8 @@
   <url></url>
   <depend package="roscpp"/>
   <depend package="nxt_ros"/>
+  <depend package="nav_msgs"/>
+  <depend package="tf_conversions"/>
 
 </package>
 

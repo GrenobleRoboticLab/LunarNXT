@@ -23,7 +23,7 @@ private:
 };
 
 Commander::Commander() {
-	commander_pub = n.advertise<lunarNXT::Order>("ui_publish", 5);
+	commander_pub = n.advertise<nxt_first::Order>("ui_publish", 5);
 }
 
 int kfd = 0;
