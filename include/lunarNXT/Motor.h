@@ -11,7 +11,7 @@ private:
 	sensor_msgs::JointState lastMsg;
 	ros::Publisher publisher;
 	void motorCallback(const sensor_msgs::JointState::ConstPtr& msg);
-	bool asOrder;
+	bool hasOrder;
 	float endPos;
 
 public:
