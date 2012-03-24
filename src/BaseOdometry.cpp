@@ -7,7 +7,7 @@
 BaseOdometry::BaseOdometry() {
 	this->leftPosition = std::vector<float>();
 	this->rightPosition = std::vector<float>();
-	
+	this->publisher = n.advertise<nav_msgs::Odometry>("odom", 5);
 	this->initialized = false;
 }
 
@@ -52,10 +52,11 @@ nav_msgs::Odometry BaseOdometry::update(sensor_msgs::JointState msg) {
 		if (delta_rot == 0) this->rot_covar = 0.00000000001;
 
 		nav_msgs::Odometry odom = nav_msgs::Odometry();
+		odom.header.stamp = ros::Time::now();
 		tf::PoseKDLToMsg(this->pose, odom.pose.pose);
 		boost::array<float, 36> covar = {0.00001, 0, 0, 0, 0, 0, 0, 0.00001, 0, 0, 0, 0, 0, 0, 10.0000, 0, 0, 0, 0, 0, 0, 1.00000, 0, 0, 0, 0, 0, 0, 1.00000, 0, 0, 0, 0, 0, 0, this->rot_covar};
 		odom.pose.covariance = covar;
-
+		this->publisher.publish(odom);
 		return odom;
 	}
 	return nav_msgs::Odometry();

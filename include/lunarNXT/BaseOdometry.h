@@ -1,6 +1,7 @@
 #ifndef BASEODOMETRY_H
 #define BASEODOMETRY_H
 
+#include "ros/ros.h"
 #include "kdl/frames.hpp"
 #include "sensor_msgs/JointState.h"
 #include "nav_msgs/Odometry.h"
@@ -17,7 +18,9 @@ private:
 	
 	bool initialized;
 	KDL::Frame pose;
-
+	
+	ros::NodeHandle n;
+	ros::Publisher publisher;
 public:
 	BaseOdometry();
 	nav_msgs::Odometry update(sensor_msgs::JointState msg);
