@@ -32,6 +32,7 @@ public:
 	void updateLeft(float position, float effort);
 	void updateRight(float position, float effort);
 	void updateRange(float range);
+	void checkGoal();
 };
 
 #endif

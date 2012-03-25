@@ -3,6 +3,8 @@
 
 #define MINRANGE 0.2
 #define PI 3.14159265
+#define WHEEL_RADIUS 7.5
+
 
 MoveMgr::MoveMgr() { }
 
@@ -30,21 +32,34 @@ void MoveMgr::turnRight(float effort) {
 }
 
 void MoveMgr::linearMove(float effort, int cm) {
-	// TODO: avancer en cm => regarder https://nxt.foote-ros-pkg.googlecode.com/hg/nxt/nxt_controllers/scripts/base_controller.py
+	this->hasGoal = true;
+	this->desiredLeftPosition = this->leftPosition + cm;
+	this->desiredRightPosition = this->rightPosition + cm;
+	this->publish(effort, effort);
 }
 
 void MoveMgr::turn(float effort, float rad) {
-	// TODO: cf linearMove
+	this->hasGoal = true;
+	float distance_to_reach = rad * WHEEL_RADIUS;
+	this->desiredRightPosition = this->rightPosition + distance_to_reach;
+	this->desiredLeftPosition = this->leftPosition - distance_to_reach;
+	
+	if (rad >= 0) this->publish(-effort, effort);	
+	else this->publish(effort, -effort);
+
+// TODO: cf linearMove
 }
 
 void MoveMgr::updateLeft(float position, float effort) {
 	this->leftPosition = position;
 	this->leftEffort = effort;
+	this->checkGoal();
 }
 
 void MoveMgr::updateRight(float position, float effort) {
 	this->rightPosition = position;
 	this->rightEffort = effort;
+	this->checkGoal();
 }
 
 void MoveMgr::updateRange(float range) {
@@ -63,4 +78,29 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
 
 	this->publisher.publish(leftCommand);
 	this->publisher.publish(rightCommand);
+}
+
+void MoveMgr::checkGoal() {
+	if (this->hasGoal) {
+		if (this->leftEffort > 0) {
+			if (this->desiredLeftPosition <= this->leftPosition) 
+				this->leftEffort = 0;
+		}
+		else if (this->leftEffort < 0) {
+                        if (this->desiredLeftPosition >= this->leftPosition)
+                                this->leftEffort = 0;
+		}
+                
+		if (this->rightEffort > 0) {
+                        if (this->desiredRightPosition <= this->rightPosition)
+                                this->rightEffort = 0;
+                }
+		else if (this->rightEffort < 0) {
+                        if (this->desiredRightPosition >= this->rightPosition) 
+                                this->rightEffort = 0;
+		}
+
+		this->publish(this->leftEffort, this->rightEffort);
+		if (this->leftEffort == 0 && this->rightEffort == 0) this->hasGoal = false;
+	}
 }

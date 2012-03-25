@@ -29,11 +29,11 @@ nav_msgs::Odometry BaseOdometry::update(sensor_msgs::JointState msg) {
 		this->initialized = true;
 	}
 	else {
-		float delta_l_pos;
+		float delta_l_pos = 0;
 		for (unsigned int i = 0; i < leftPos.size(); i++) delta_l_pos += leftPos.at(i);
 		for (unsigned int i = 0; i < this->leftPosition.size(); i++) delta_l_pos -= this->leftPosition.at(i);
 		
-		float delta_r_pos;
+		float delta_r_pos = 0;
 		for (unsigned int i = 0; i < rightPos.size(); i++) delta_r_pos += rightPos.at(i);
 		for (unsigned int i = 0; i < this->rightPosition.size(); i++) delta_r_pos -= this->rightPosition.at(i);
 		
@@ -54,7 +54,14 @@ nav_msgs::Odometry BaseOdometry::update(sensor_msgs::JointState msg) {
 		nav_msgs::Odometry odom = nav_msgs::Odometry();
 		odom.header.stamp = ros::Time::now();
 		tf::PoseKDLToMsg(this->pose, odom.pose.pose);
-		boost::array<float, 36> covar = {0.00001, 0, 0, 0, 0, 0, 0, 0.00001, 0, 0, 0, 0, 0, 0, 10.0000, 0, 0, 0, 0, 0, 0, 1.00000, 0, 0, 0, 0, 0, 0, 1.00000, 0, 0, 0, 0, 0, 0, this->rot_covar};
+		boost::array<float, 36> covar =	{ 
+							{ 0.00001, 0, 0, 0, 0, 0,
+							  0, 0.00001, 0, 0, 0, 0,
+							  0, 0, 10.0000, 0, 0, 0,
+							  0, 0, 0, 1.00000, 0, 0,
+							  0, 0, 0, 0, 1.00000, 0,
+							  0, 0, 0, 0, 0, this->rot_covar }
+						};
 		odom.pose.covariance = covar;
 		this->publisher.publish(odom);
 		return odom;
