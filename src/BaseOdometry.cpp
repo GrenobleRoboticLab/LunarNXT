@@ -40,10 +40,8 @@ nav_msgs::Odometry BaseOdometry::update(sensor_msgs::JointState msg) {
 		float delta_trans = (delta_l_pos + delta_r_pos) * RADIUS / 2.0;
 		float delta_rot   = (delta_r_pos - delta_l_pos)* RADIUS /(2.0 * WHEELBASICS);
 		
-		ROS_INFO("DELTA ROTATION = %f", delta_rot);
-		ROS_INFO("DELTA TRANSLATION = %f", delta_trans);
-
 		KDL::Twist twist = KDL::Twist(KDL::Vector(delta_trans, 0, 0), KDL::Vector(0, 0, delta_rot));
+		
 		this->leftPosition = leftPos;
 		this->rightPosition = rightPos;
 		this->pose = KDL::addDelta(this->pose, this->pose.M  * twist);

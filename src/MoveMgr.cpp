@@ -5,7 +5,6 @@
 #define PI 3.14159265
 #define WHEEL_RADIUS 7.5
 
-
 MoveMgr::MoveMgr() { }
 
 MoveMgr::MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName) {
@@ -35,7 +34,9 @@ void MoveMgr::linearMove(float effort, int cm) {
 	this->hasGoal = true;
 	this->desiredLeftPosition = this->leftPosition + cm;
 	this->desiredRightPosition = this->rightPosition + cm;
-	this->publish(effort, effort);
+	
+	if (cm >= 0) this->publish(effort, effort);
+	else this->publish(-effort, -effort);
 }
 
 void MoveMgr::turn(float effort, float rad) {
@@ -46,8 +47,6 @@ void MoveMgr::turn(float effort, float rad) {
 	
 	if (rad >= 0) this->publish(-effort, effort);	
 	else this->publish(effort, -effort);
-
-// TODO: cf linearMove
 }
 
 void MoveMgr::updateLeft(float position, float effort) {
