@@ -7,7 +7,11 @@ EnvAnalyser::EnvAnalyser() { }
 EnvAnalyser::EnvAnalyser(MoveMgr* mm) {
 	this->mm = mm;
 	this->bo = BaseOdometry();
-	this->lf = new LineFollower(this->mm);
+	this->lf = LineFollower(this->mm);
+}
+
+EnvAnalyser::~EnvAnalyser() {
+	this->mm = NULL;
 }
 
 void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
@@ -47,7 +51,7 @@ void EnvAnalyser::colorCallback(const nxt_msgs::Color::ConstPtr& msg) {
 	colorMsg.r = msg->r;
 	colorMsg.g = msg->g;
 	colorMsg.b = msg->b;
-	this->lf->updateColor(colorMsg);
+	this->lf.updateColor(colorMsg);
 }
 
 void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {

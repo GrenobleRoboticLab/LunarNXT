@@ -11,6 +11,7 @@ private:
 	bool launched;
 	
 public:
+	LineFollower();
 	LineFollower(MoveMgr* mm);
 	void updateColor(nxt_msgs::Color colorMsg);
 	void launch();

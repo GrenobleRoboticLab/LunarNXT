@@ -1,6 +1,8 @@
 #include "lunarNXT/LineFollower.h"
 
 
+LineFollower::LineFollower() { }
+
 LineFollower::LineFollower(MoveMgr* mm) {
 	this->mm = mm;
 }

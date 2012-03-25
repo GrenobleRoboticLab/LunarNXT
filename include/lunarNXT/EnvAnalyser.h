@@ -14,13 +14,14 @@
 class EnvAnalyser {
 private:
 	MoveMgr* mm;
-	LineFollower* lf;
+	LineFollower lf;
 	BaseOdometry bo;
 
 public:
 	EnvAnalyser();
 	EnvAnalyser(MoveMgr* mm);
-	
+	~EnvAnalyser();
+
 	void motorCallback(const sensor_msgs::JointState::ConstPtr& msg);
 	void rightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg);
 	void leftTouchCallback(const nxt_msgs::Contact::ConstPtr& msg);

@@ -13,6 +13,10 @@ MoveMgr::MoveMgr(ros::Publisher publisher, std::string leftName, std::string rig
 	this->hasGoal = false;
 }
 
+MoveMgr::~MoveMgr() {
+	this->publish(0, 0);	
+}
+
 void MoveMgr::linearMove(float effort) {
 	this->publish(effort, effort);
 }

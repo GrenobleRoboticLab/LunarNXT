@@ -18,6 +18,7 @@ private:
 public:
 	MoveMgr();
 	MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName);
+	~MoveMgr();
 
 	// Deplacement infinit /!\ doit etre stope manuellement
 	void linearMove(float effort);
