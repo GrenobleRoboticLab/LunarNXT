@@ -11,6 +11,8 @@
 #define KEYCODE_S 's'
 #define KEYCODE_X 'x'
 #define KEYCODE_Z 'z'
+#define KEYCODE_L 'l'
+#define KEYCODE_M 'm'
 
 class Commander {
 public:
@@ -83,6 +85,14 @@ void Commander::keyLoop() {
 			case KEYCODE_A:
 				ROS_INFO("Stop !");
 				msg.order = "stop";
+				break;
+			case KEYCODE_L:
+				ROS_INFO("LineLauncher");
+				msg.order = "line";
+				break;
+			case KEYCODE_M:
+				ROS_INFO("LineUnLauncher");
+				msg.order = "no_line";
 				break;
 		}
 

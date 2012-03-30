@@ -30,7 +30,6 @@ void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
 	else if (msg->name.back() == "motor_r") {
                 this->mm->updateRight(msg->position.back(), msg->effort.back());
         }
-	// TODO
 	else  if (msg->name.back() == "motor_color") {
 
         }
@@ -63,13 +62,17 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 	// actions commandee par l'utilisateur
 	// cf ${ProjectDir}/msg/Order.msg
 	if (msg->order == "go")
-		this->mm->linearMove(1);
+		this->mm->linearMove(0.8, 1);
 	else if (msg->order == "back")
-                this->mm->linearMove(-1);
+                this->mm->linearMove(0.8, -1);
 	else if (msg->order == "stop")
                 this->mm->linearMove(0);
 	else if (msg->order == "turn_l")
-		this->mm->turnLeft(1);
+		this->mm->turn(0.8, 0.1);
 	else if (msg->order == "turn_r")
-		this->mm->turnRight(1);
+		this->mm->turn(0.8, 0.1);
+	else if (msg->order == "line")
+		this->lf.launch();
+	else if (msg->order == "no_line")
+		this->lf.unLaunch();
 }

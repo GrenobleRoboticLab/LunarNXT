@@ -8,6 +8,7 @@ BaseOdometry::BaseOdometry() {
 	this->leftPosition = std::vector<float>();
 	this->rightPosition = std::vector<float>();
 	this->publisher = n.advertise<nav_msgs::Odometry>("odom", 5);
+	if (PUBLISH_TF) this->br = tf::TransformBroadcaster();
 	this->initialized = false;
 }
 
@@ -39,12 +40,18 @@ nav_msgs::Odometry BaseOdometry::update(sensor_msgs::JointState msg) {
 		
 		float delta_trans = (delta_l_pos + delta_r_pos) * RADIUS / 2.0;
 		float delta_rot   = (delta_r_pos - delta_l_pos)* RADIUS /(2.0 * WHEELBASICS);
-		
+
 		KDL::Twist twist = KDL::Twist(KDL::Vector(delta_trans, 0, 0), KDL::Vector(0, 0, delta_rot));
 		
 		this->leftPosition = leftPos;
 		this->rightPosition = rightPos;
 		this->pose = KDL::addDelta(this->pose, this->pose.M  * twist);
+
+		if (PUBLISH_TF)
+			this->br.sendTransform(
+				tf::StampedTransform(
+					tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.1, 0.0, 0.2)),
+						ros::Time::now(),"base_link", "odom"));
 
 		this->rot_covar = 1.0;
 		if (delta_rot == 0) this->rot_covar = 0.00000000001;

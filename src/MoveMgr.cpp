@@ -32,16 +32,15 @@ void MoveMgr::turnRight(float effort) {
 
 void MoveMgr::linearMove(float effort, int cm) {
 	this->hasGoal = true;
-	this->desiredLeftPosition = this->leftPosition + cm;
-	this->desiredRightPosition = this->rightPosition + cm;
-	
+	this->desiredLeftPosition = this->leftPosition + (cm/2);
+	this->desiredRightPosition = this->rightPosition + (cm/2);
 	if (cm >= 0) this->publish(effort, effort);
 	else this->publish(-effort, -effort);
 }
 
 void MoveMgr::turn(float effort, float rad) {
 	this->hasGoal = true;
-	float distance_to_reach = rad * WHEEL_RADIUS;
+	float distance_to_reach = rad * (WHEEL_RADIUS/2);
 	this->desiredRightPosition = this->rightPosition + distance_to_reach;
 	this->desiredLeftPosition = this->leftPosition - distance_to_reach;
 	
@@ -66,6 +65,8 @@ void MoveMgr::updateRange(float range) {
 }
 
 void MoveMgr::publish(float leftEffort, float rightEffort) {
+	this->desiredLeftEffort = leftEffort;
+	this->desiredRightEffort = rightEffort;
 	nxt_msgs::JointCommand leftCommand = nxt_msgs::JointCommand();
 	nxt_msgs::JointCommand rightCommand = nxt_msgs::JointCommand();
 	
@@ -81,25 +82,41 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
 
 void MoveMgr::checkGoal() {
 	if (this->hasGoal) {
-		if (this->leftEffort > 0) {
-			if (this->desiredLeftPosition <= this->leftPosition) 
-				this->leftEffort = 0;
-		}
-		else if (this->leftEffort < 0) {
-                        if (this->desiredLeftPosition >= this->leftPosition)
-                                this->leftEffort = 0;
-		}
-                
-		if (this->rightEffort > 0) {
-                        if (this->desiredRightPosition <= this->rightPosition)
-                                this->rightEffort = 0;
-                }
-		else if (this->rightEffort < 0) {
-                        if (this->desiredRightPosition >= this->rightPosition) 
-                                this->rightEffort = 0;
-		}
+		bool left = false;
+		bool right = false;
+		if (this->leftEffort == this->desiredLeftEffort)
+			left = checkLeftGoal();
 
-		this->publish(this->leftEffort, this->rightEffort);
-		if (this->leftEffort == 0 && this->rightEffort == 0) this->hasGoal = false;
+		if (this->rightEffort == this->desiredRightEffort) 
+			right = checkRightGoal();
+
+		if (right || left) 
+			this->publish(this->desiredLeftEffort, this->desiredRightEffort);		
+                
+		if (this->desiredLeftEffort == 0 && this->desiredRightEffort == 0) 
+			this->hasGoal = false;
 	}
+}
+
+bool MoveMgr::checkLeftGoal() {
+	if ((this->leftEffort > 0 && this->desiredLeftPosition <= this->leftPosition) ||
+	    (this->leftEffort < 0 && this->desiredLeftPosition >= this->leftPosition)) {
+   		this->desiredLeftEffort = 0;
+		return true;
+	}
+	return false;
+}
+
+bool MoveMgr::checkRightGoal() {
+        if ((this->rightEffort > 0 && this->desiredRightPosition <= this->rightPosition) ||
+            (this->rightEffort < 0 && this->desiredRightPosition >= this->rightPosition)) {
+                this->desiredRightEffort = 0;
+                return true;
+        }
+        return false;
+}
+
+void MoveMgr::stop() {
+	this->hasGoal = false;
+	this->publish(0, 0);
 }

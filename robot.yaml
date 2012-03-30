@@ -18,13 +18,13 @@ nxt_robot:
     frame_id: touch_frame
     name: touch_l
     port: PORT_1
-    desired_frequency: 20.0
+    desired_frequency: 2.0 
 
   - type: touch
     frame_id: touch_frame
     name: touch_r
     port: PORT_2
-    desired_frequency: 20.0
+    desired_frequency: 2.0
 
   - type: ultrasonic
     frame_id: ultrasonic_link
@@ -33,10 +33,10 @@ nxt_robot:
     spread_angle: 0.2
     min_range: 0.01
     max_range: 2.5
-    desired_frequency: 20.0
+    desired_frequency: 2.0
 
   - type: color
     port: PORT_4
-    desired_frequency: 0.1
+    desired_frequency: 10.0
     name: color_frame
     frame_id: color_frame
