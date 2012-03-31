@@ -25,6 +25,7 @@ public:
 	MoveMgr();
 	MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName);
 	~MoveMgr();
+	bool hasGoalSet();
 
 	// Deplacement infinit /!\ doit etre stope manuellement
 	void linearMove(float effort);
@@ -36,6 +37,7 @@ public:
 	void turn(float effort, float rad);
 
 	void stop();
+
 	void updateLeft(float position, float effort);
 	void updateRight(float position, float effort);
 	void updateRange(float range);

@@ -9,17 +9,19 @@ class LineFollower {
 private:
 	MoveMgr* mm;
 	bool launched;
-	bool initialyzed;
-	nxt_msgs::Color colorTracked;
+	bool initialized;
+	bool color[3];
+	bool online;
+	std::string direction;
+	
 	
 public:
 	LineFollower();
 	LineFollower(MoveMgr* mm);
 	void updateColor(nxt_msgs::Color colorMsg);
 	void launch();
-	void unLaunch();
-	void treat(nxt_msgs::Color color);
-	bool isLaunch();
+	void unlaunch();
+	void treat(nxt_msgs::Color colorMsg);
 };
 
 #endif

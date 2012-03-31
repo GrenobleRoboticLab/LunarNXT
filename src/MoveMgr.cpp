@@ -120,3 +120,5 @@ void MoveMgr::stop() {
 	this->hasGoal = false;
 	this->publish(0, 0);
 }
+
+bool MoveMgr::hasGoalSet() { return this->hasGoal; }

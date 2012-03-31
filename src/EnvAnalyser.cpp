@@ -74,5 +74,5 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 	else if (msg->order == "line")
 		this->lf.launch();
 	else if (msg->order == "no_line")
-		this->lf.unLaunch();
+		this->lf.unlaunch();
 }
