@@ -10,7 +10,7 @@ private:
 	MoveMgr* mm;
 	bool launched;
 	bool initialized;
-	bool color[3];
+	float color[3];
 	bool online;
 	std::string direction;
 	
