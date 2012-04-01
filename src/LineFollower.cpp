@@ -16,9 +16,9 @@ void LineFollower::updateColor(nxt_msgs::Color colorMsg) {
 		this->treat(colorMsg);
 	}
 	else if (this->launched == true) {
-		this->color[0] = (bool)colorMsg.r;
-		this->color[1] = (bool)colorMsg.g;
-		this->color[2] = (bool)colorMsg.b;
+		this->color[0] = colorMsg.r;
+		this->color[1] = colorMsg.g;
+		this->color[2] = colorMsg.b;
 
 		this->initialized = true;
 		this->online = true;
@@ -38,9 +38,9 @@ void LineFollower::unlaunch() {
 
 void LineFollower::treat(nxt_msgs::Color colorMsg) {
 
-	if((bool)colorMsg.r == this->color[0] && 
-	(bool)colorMsg.g == this->color[1] && 
-	(bool)colorMsg.b == this->color[2]) {
+	if(colorMsg.r == this->color[0] && 
+	colorMsg.g == this->color[1] && 
+	colorMsg.b == this->color[2]) {
 		this->mm->stop();
 		this->online = true;
 		this->mm->linearMove(0.8);
