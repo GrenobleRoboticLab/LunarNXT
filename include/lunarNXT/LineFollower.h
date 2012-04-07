@@ -1,27 +1,29 @@
 #ifndef LINEFOLLOWER_H
 #define LINEFOLLOWER_H
 
+#include "lunarNXT/Mode.h"
+#include "lunarNXT/Receptor.h"
+
+#include "MoveMgr.h"
+
 #include "nxt_msgs/Color.h"
 #include "nxt_msgs/Range.h"
-#include "lunarNXT/MoveMgr.h"
 
-class LineFollower {
+
+class LineFollower : public Receptor, public Mode {
 private:
 	MoveMgr* mm;
-	bool launched;
-	bool initialized;
-	bool color[3];
+	nxt_msgs::Color colorMsg;
+	float color[3];
 	bool online;
 	std::string direction;
+	void treat();
 	
 	
 public:
 	LineFollower();
 	LineFollower(MoveMgr* mm);
-	void updateColor(nxt_msgs::Color colorMsg);
-	void launch();
-	void unlaunch();
-	void treat(nxt_msgs::Color colorMsg);
+	void updateColor(nxt_msgs::Color msg);
 };
 
 #endif

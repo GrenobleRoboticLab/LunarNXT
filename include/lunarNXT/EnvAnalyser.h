@@ -6,7 +6,9 @@
 #include "nxt_msgs/Color.h"
 #include "nxt_msgs/Range.h"
 #include "lunarNXT/Order.h"
+
 #include "lunarNXT/MoveMgr.h"
+#include "lunarNXT/Mode.h"
 #include "lunarNXT/LineFollower.h"
 #include "lunarNXT/BaseOdometry.h"
 

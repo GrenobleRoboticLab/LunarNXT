@@ -1,46 +1,44 @@
 #ifndef MOVEMGR_H
 #define MOVEMGR_H
 
-#include <string>
-#include "ros/ros.h"
+#include "lunarNXT/Receptor.h"
 
-class MoveMgr {
+class MoveMgr : public Receptor {
 private:
-	ros::Publisher publisher;
-	std::string leftName, rightName;
-	
-	bool hasGoal;
-	float desiredLeftPosition, desiredRightPosition;
-	float desiredLeftEffort, desiredRightEffort;
+        ros::Publisher publisher;
 
-	float leftPosition, rightPosition;
-	float leftEffort, rightEffort;
-	
-	void publish(float leftEffort, float rightEffort);
-	void checkGoal();
-	bool checkLeftGoal();
-	bool checkRightGoal();
+        bool hasGoal;
+        float desiredLeftPosition, desiredRightPosition;
+        float desiredLeftEffort, desiredRightEffort;
+
+        float leftPosition, rightPosition;
+        float leftEffort, rightEffort;
+
+        void publish(float leftEffort, float rightEffort);
+        void checkGoal();
+        bool checkLeftGoal();
+        bool checkRightGoal();
 
 public:
-	MoveMgr();
-	MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName);
-	~MoveMgr();
-	bool hasGoalSet();
+        MoveMgr();
+        MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName);
+        ~MoveMgr();
 
-	// Deplacement infinit /!\ doit etre stope manuellement
-	void linearMove(float effort);
-	void turnLeft(float effort);
-	void turnRight(float effort);
+        bool hasGoalSet();
 
-	// deplacement finit avec une marge d'erreur
-	void linearMove(float effort, int cm);
-	void turn(float effort, float rad);
+        // Deplacement infinit /!\ doit etre stope manuellement
+        void linearMove(float effort);
+        void turnLeft(float effort);
+        void turnRight(float effort);
 
-	void stop();
+        // deplacement finit avec une marge d'erreur
+        void linearMove(float effort, int cm);
+        void turn(float effort, float rad);
 
-	void updateLeft(float position, float effort);
-	void updateRight(float position, float effort);
-	void updateRange(float range);
+        void stop();
+
+        void updateMotors(sensor_msgs::JointState msg);
+        void updateRange(nxt_msgs::Range msg);
 };
 
 #endif

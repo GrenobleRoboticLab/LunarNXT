@@ -1,7 +1,6 @@
 #include "lunarNXT/EnvAnalyser.h"
 #include "nxt_msgs/JointCommand.h"
 
-
 EnvAnalyser::EnvAnalyser() { }
 
 EnvAnalyser::EnvAnalyser(MoveMgr* mm) {
@@ -15,24 +14,17 @@ EnvAnalyser::~EnvAnalyser() {
 }
 
 void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
-	// update BaseOdometry
-	sensor_msgs::JointState tmsg = sensor_msgs::JointState();
-	tmsg.name = msg->name;
-	tmsg.position = msg->position;
-	tmsg.velocity = msg->velocity;
-	tmsg.effort = msg->effort;
-	this->bo.update(tmsg);
-        
-	// Update MoveMgr
-	if (msg->name.back() == "motor_l") {
-                this->mm->updateLeft(msg->position.back(), msg->effort.back());
-        }
-	else if (msg->name.back() == "motor_r") {
-                this->mm->updateRight(msg->position.back(), msg->effort.back());
-        }
-	else  if (msg->name.back() == "motor_color") {
+	sensor_msgs::JointState motorMsg = sensor_msgs::JointState();
+	motorMsg.name = msg->name;
+	motorMsg.position = msg->position;
+	motorMsg.effort = msg->effort;
+	motorMsg.velocity = msg->velocity;
 
-        }
+	// update BaseOdometry
+	this->bo.update(motorMsg);
+
+	// update MoveMgr
+	this->mm->updateMotors(motorMsg);
 }
 
 void EnvAnalyser::rightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
@@ -54,8 +46,14 @@ void EnvAnalyser::colorCallback(const nxt_msgs::Color::ConstPtr& msg) {
 }
 
 void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
+	nxt_msgs::Range rangeMsg = nxt_msgs::Range();
+	rangeMsg.range = msg->range;
+	rangeMsg.range_min = msg->range_min;
+	rangeMsg.range_max = msg->range_max;
+	rangeMsg.spread_angle = msg->spread_angle;
+
 	// update MoveMgr
-	this->mm->updateRange(msg->range);
+	this->mm->updateRange(rangeMsg);
 }
 
 void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
