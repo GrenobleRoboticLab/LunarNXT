@@ -16,11 +16,7 @@ void LineFollower::updateColor(nxt_msgs::Color msg) {
 	if (this->isInitialized()) {
 		this->treat();
 	}
-<<<<<<< HEAD
 	else if (this->isLaunched()) {
-=======
-	else if (this->launched == true) {
->>>>>>> 2763f47c71e47f6b89cf23bd0e840426f517ab8f
 		this->color[0] = colorMsg.r;
 		this->color[1] = colorMsg.g;
 		this->color[2] = colorMsg.b;
@@ -41,27 +37,27 @@ void LineFollower::treat() {
 	}
 	else {
 		if(this->direction == "left") {
-			if (this->online == true) {
+			if (this->online) {
 				this->mm->turn(0.8, 0.5);
 				this->online = false;
 			}
 			if(!this->mm->hasGoalSet()) {
 				this->direction = "right";
 				this->mm->turn(0.8, -1);
-				if(this->mm->hasGoalSet() == false) {
+				if(!this->mm->hasGoalSet()) {
 					this->unlaunch();
 				}
 			}
 		}
 		else if(this->direction == "right") {
-			if (this->online == true) {
+			if (this->online) {
 				this->mm->turn(0.8, -0.5);
 				this->online = false;
 			}
 			if(!this->mm->hasGoalSet()) {
 				this->direction = "left";
 				this->mm->turn(0.8, 1);
-				if(this->mm->hasGoalSet() == false) {
+				if(!this->mm->hasGoalSet()) {
 					this->unlaunch();
 				}
 			}
