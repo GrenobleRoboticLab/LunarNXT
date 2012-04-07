@@ -1,16 +1,19 @@
 #include "lunarNXT/EnvAnalyser.h"
 #include "nxt_msgs/JointCommand.h"
 
+#include "lunarNXT/LineFollower.h"
+
 EnvAnalyser::EnvAnalyser() { }
 
 EnvAnalyser::EnvAnalyser(MoveMgr* mm) {
 	this->mm = mm;
 	this->bo = BaseOdometry();
-	this->lf = LineFollower(this->mm);
+	this->mode = new LineFollower(this->mm);
 }
 
 EnvAnalyser::~EnvAnalyser() {
-	this->mm = NULL;
+	delete this->mm;
+	delete this->mode;
 }
 
 void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
@@ -42,7 +45,7 @@ void EnvAnalyser::colorCallback(const nxt_msgs::Color::ConstPtr& msg) {
 	colorMsg.r = msg->r;
 	colorMsg.g = msg->g;
 	colorMsg.b = msg->b;
-	this->lf.updateColor(colorMsg);
+	this->mode->updateColor(colorMsg);
 }
 
 void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
@@ -70,7 +73,7 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 	else if (msg->order == "turn_r")
 		this->mm->turn(0.8, 0.1);
 	else if (msg->order == "line")
-		this->lf.launch();
+		this->mode->launch();
 	else if (msg->order == "no_line")
-		this->lf.unlaunch();
+		this->mode->unlaunch();
 }

@@ -9,14 +9,13 @@
 
 #include "lunarNXT/MoveMgr.h"
 #include "lunarNXT/Mode.h"
-#include "lunarNXT/LineFollower.h"
 #include "lunarNXT/BaseOdometry.h"
 
 
 class EnvAnalyser {
 private:
 	MoveMgr* mm;
-	LineFollower lf;
+	Mode* mode;
 	BaseOdometry bo;
 
 public:

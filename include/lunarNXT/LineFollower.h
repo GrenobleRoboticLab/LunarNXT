@@ -2,7 +2,6 @@
 #define LINEFOLLOWER_H
 
 #include "lunarNXT/Mode.h"
-#include "lunarNXT/Receptor.h"
 
 #include "MoveMgr.h"
 
@@ -10,7 +9,7 @@
 #include "nxt_msgs/Range.h"
 
 
-class LineFollower : public Receptor, public Mode {
+class LineFollower : public Mode {
 private:
 	MoveMgr* mm;
 

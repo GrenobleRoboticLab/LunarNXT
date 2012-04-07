@@ -1,12 +1,9 @@
 #include "lunarNXT/LineFollower.h"
 
 
-LineFollower::LineFollower() { }
+LineFollower::LineFollower() : Mode(NULL) { }
 
-LineFollower::LineFollower(MoveMgr* mm) :
-				Receptor(mm->getNameLeftMotor(), mm->getNameRightMotor()),
-				Mode(mm)
-{
+LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
 	this->online = false;
 	this->direction = "left";
 }
