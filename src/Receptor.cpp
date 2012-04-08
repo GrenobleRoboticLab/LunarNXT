@@ -1,5 +1,6 @@
 #include "lunarNXT/Receptor.h"
 
+// Constructeurs
 Receptor::Receptor() { ; }
 
 Receptor::Receptor(std::string nameLeftMotor, std::string nameRightMotor) {
@@ -7,8 +8,10 @@ Receptor::Receptor(std::string nameLeftMotor, std::string nameRightMotor) {
 	this->nameRightMotor = nameRightMotor;
 }
 
+// destructeur
 Receptor::~Receptor() { ROS_INFO("Receptor deleted"); }
 
+// Getters
 std::string Receptor::getNameLeftMotor() { return this->nameLeftMotor; }
 std::string Receptor::getNameRightMotor() { return this->nameRightMotor; }
 
@@ -18,8 +21,6 @@ void Receptor::updateLeftTouch(nxt_msgs::Contact msg) { ; }
 
 // Range sensor updater
 void Receptor::updateRange(nxt_msgs::Range msg) { ; }
-
-
 
 // Color sensor updater
 void Receptor::updateColor(nxt_msgs::Color msg) { ; }
