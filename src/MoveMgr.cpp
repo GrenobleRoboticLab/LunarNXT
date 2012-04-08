@@ -15,7 +15,7 @@ MoveMgr::MoveMgr(ros::Publisher publisher, std::string leftName, std::string rig
 
 // Destructeur
 MoveMgr::~MoveMgr() {
-        this->publish(0, 0);
+        this->stop();
 }
 
 // Mouvement lineaire infini ver l'avant ou l'arriere
