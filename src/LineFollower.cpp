@@ -1,6 +1,6 @@
 #include "lunarNXT/LineFollower.h"
 
-
+// Constructeurs
 LineFollower::LineFollower() : Mode(NULL) { }
 
 LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
@@ -8,6 +8,7 @@ LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
 	this->direction = "left";
 }
 
+// Mise a jour du capteur de couleurs
 void LineFollower::updateColor(nxt_msgs::Color msg) {
 	this->colorMsg = msg;
 	if (this->isInitialized()) {
@@ -23,11 +24,13 @@ void LineFollower::updateColor(nxt_msgs::Color msg) {
 	}
 }
 
+// Traitement du mode
 void LineFollower::treat() {
 
 	if(colorMsg.r == this->color[0] && 
-	colorMsg.g == this->color[1] && 
-	colorMsg.b == this->color[2]) {
+		colorMsg.g == this->color[1] && 
+		colorMsg.b == this->color[2]) 
+	{
 		this->mm->stop();
 		this->online = true;
 		this->mm->linearMove(0.8);
