@@ -19,6 +19,7 @@ public:
 	std::string getNameLeftMotor();
 	std::string getNameRightMotor();
 
+	// Constructeurs & destructeur
 	Receptor();
 	Receptor(std::string nameLeftMotor, std::string nameRightMotor);
 	virtual ~Receptor();
