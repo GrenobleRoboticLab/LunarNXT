@@ -5,6 +5,7 @@
 #define PI 3.14159265
 #define WHEEL_RADIUS 7.5
 
+// Constructeur
 MoveMgr::MoveMgr() { }
 
 MoveMgr::MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName) : Receptor(leftName, rightName) {
@@ -12,22 +13,27 @@ MoveMgr::MoveMgr(ros::Publisher publisher, std::string leftName, std::string rig
         this->hasGoal = false;
 }
 
+// Destructeur
 MoveMgr::~MoveMgr() {
         this->publish(0, 0);
 }
 
+// Mouvement lineaire infini ver l'avant ou l'arriere
 void MoveMgr::linearMove(float effort) {
         this->publish(effort, effort);
 }
 
+// Rotation infinie vers la gauche
 void MoveMgr::turnLeft(float effort) {
         this->publish(-effort, effort);
 }
 
+// Rotation infinie vers la droite
 void MoveMgr::turnRight(float effort) {
         this->publish(effort, -effort);
 }
 
+// Mouvement lineaire ver l'avant ou l'arriere
 void MoveMgr::linearMove(float effort, int cm) {
         this->hasGoal = true;
         this->desiredLeftPosition = this->leftPosition + (cm/2);
@@ -36,6 +42,8 @@ void MoveMgr::linearMove(float effort, int cm) {
         else this->publish(-effort, -effort);
 }
 
+
+// Rotation finie vers la droite ou la gauche
 void MoveMgr::turn(float effort, float rad) {
         this->hasGoal = true;
         float distance_to_reach = rad * (WHEEL_RADIUS/2);
@@ -46,6 +54,13 @@ void MoveMgr::turn(float effort, float rad) {
         else this->publish(effort, -effort);
 }
 
+// stope tout deplacement (fini et infini) en cours
+void MoveMgr::stop() {
+        this->hasGoal = false;
+        this->publish(0, 0);
+}
+
+// Mise a jour de la position et de l'effort actuelle des Moteurs
 void MoveMgr::updateMotors(sensor_msgs::JointState msg) {
 	if (this->getNameLeftMotor() == msg.name.back()) {
         	this->leftPosition = msg.position.back();
@@ -58,10 +73,13 @@ void MoveMgr::updateMotors(sensor_msgs::JointState msg) {
 	this->checkGoal();
 }
 
+// Mise a jour du capteur a ultrason
+// stope les moteurs en cas de proximite
 void MoveMgr::updateRange(nxt_msgs::Range msg) {
-        if (msg.range < MINRANGE) this->publish(0, 0);
+        if (msg.range < MINRANGE) this->stop();
 }
 
+// publie les efforts desires aux moteurs
 void MoveMgr::publish(float leftEffort, float rightEffort) {
         this->desiredLeftEffort = leftEffort;
         this->desiredRightEffort = rightEffort;
@@ -78,6 +96,7 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
         this->publisher.publish(rightCommand);
 }
 
+// verifie si les moteurs ont atteint les positions desirees
 void MoveMgr::checkGoal() {
         if (this->hasGoal) {
                 bool left = false;
@@ -96,6 +115,7 @@ void MoveMgr::checkGoal() {
         }
 }
 
+// verifie si le moteur gauche a atteint la position desiree
 bool MoveMgr::checkLeftGoal() {
         if ((this->leftEffort > 0 && this->desiredLeftPosition <= this->leftPosition) ||
             (this->leftEffort < 0 && this->desiredLeftPosition >= this->leftPosition)) {
@@ -105,6 +125,7 @@ bool MoveMgr::checkLeftGoal() {
         return false;
 }
 
+// verifie si le moteur droit a atteint la position desiree
 bool MoveMgr::checkRightGoal() {
         if ((this->rightEffort > 0 && this->desiredRightPosition <= this->rightPosition) ||
             (this->rightEffort < 0 && this->desiredRightPosition >= this->rightPosition)) {
@@ -114,12 +135,7 @@ bool MoveMgr::checkRightGoal() {
         return false;
 }
 
-void MoveMgr::stop() {
-        this->hasGoal = false;
-        this->publish(0, 0);
-}
-
-bool MoveMgr::hasGoalSet() { return this->hasGoal; }
-
-float MoveMgr::getLeftPos() { return this->leftPosition; }
-float MoveMgr::getRightPos() { return this->rightPosition; }
+// Getters
+bool MoveMgr::hasGoalSet()	{ return this->hasGoal; }
+float MoveMgr::getLeftPos()	{ return this->leftPosition; }
+float MoveMgr::getRightPos()	{ return this->rightPosition; }
