@@ -120,3 +120,6 @@ void MoveMgr::stop() {
 }
 
 bool MoveMgr::hasGoalSet() { return this->hasGoal; }
+
+float MoveMgr::getLeftPos() { return this->leftPosition; }
+float MoveMgr::getRightPos() { return this->rightPosition; }
