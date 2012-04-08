@@ -14,7 +14,6 @@ private:
 
 public:
 	LunarNXT();
-	~LunarNXT();
 };
 
 LunarNXT::LunarNXT() {
@@ -28,11 +27,6 @@ LunarNXT::LunarNXT() {
         this->subs.push_back(n.subscribe("touch_l", 5, &EnvAnalyser::leftTouchCallback, &this->ea));
         this->subs.push_back(n.subscribe("touch_r", 5, &EnvAnalyser::rightTouchCallback, &this->ea));
         this->subs.push_back(n.subscribe("ui_publish", 5, &EnvAnalyser::uiCallback, &this->ea));
-}
-
-LunarNXT::~LunarNXT() {
-	delete this->mm;
-	delete this->ea;
 }
 
 int main(int argc, char** argv) {
