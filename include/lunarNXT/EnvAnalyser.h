@@ -14,15 +14,20 @@
 
 class EnvAnalyser {
 private:
+	// Gestion du mode et des deplacements du robot
 	MoveMgr* mm;
 	Mode* mode;
+	
+	// testing
 	BaseOdometry bo;
 
 public:
+	// Construsteurs et destructeur
 	EnvAnalyser();
 	EnvAnalyser(MoveMgr* mm);
 	~EnvAnalyser();
 
+	// Callbacks des capteurs
 	void motorCallback(const sensor_msgs::JointState::ConstPtr& msg);
 	void rightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg);
 	void leftTouchCallback(const nxt_msgs::Contact::ConstPtr& msg);
