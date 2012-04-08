@@ -37,8 +37,13 @@ public:
 
         void stop();
 
+        // MaJ des capteurs
         void updateMotors(sensor_msgs::JointState msg);
         void updateRange(nxt_msgs::Range msg);
+        
+        // Getters
+        float getLeftPos();
+        float getRightPos();
 };
 
 #endif
