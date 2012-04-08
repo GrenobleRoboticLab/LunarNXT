@@ -3,6 +3,7 @@
 
 #include "lunarNXT/LineFollower.h"
 
+// Constructeurs
 EnvAnalyser::EnvAnalyser() { }
 
 EnvAnalyser::EnvAnalyser(MoveMgr* mm) {
@@ -11,11 +12,14 @@ EnvAnalyser::EnvAnalyser(MoveMgr* mm) {
 	this->mode = new LineFollower(this->mm);
 }
 
+// destructeur
 EnvAnalyser::~EnvAnalyser() {
 	delete this->mm;
 	delete this->mode;
 }
 
+// Callback du topic JointState
+// Met a jour le MoveMgr
 void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
 	sensor_msgs::JointState motorMsg = sensor_msgs::JointState();
 	motorMsg.name = msg->name;
@@ -30,24 +34,37 @@ void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
 	this->mm->updateMotors(motorMsg);
 }
 
+// Callback du capteur de contact droit
+// met a jour le mode
 void EnvAnalyser::rightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
-	// TODO: what do we do ?
+	nxt_msgs::Contact contactMsg = nxt_msgs::Contact();
+	contactMsg.contact = msg->contact;
+	this->mode->updateRightTouch(contactMsg);
 }
 
+// Callback du capteur de contact gauche
+// met a jour le mode
 void EnvAnalyser::leftTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
-	// TODO: what do we do ?
+	nxt_msgs::Contact contactMsg = nxt_msgs::Contact();
+	contactMsg.contact = msg->contact;
+	this->mode->updateLeftTouch(contactMsg);
 }
 
+
+// Callback du capteur de couleur
+// Met a jour le mode
 void EnvAnalyser::colorCallback(const nxt_msgs::Color::ConstPtr& msg) {
-	// update LineFollower
 	nxt_msgs::Color colorMsg =  nxt_msgs::Color();
 	colorMsg.intensity = msg->intensity;
 	colorMsg.r = msg->r;
 	colorMsg.g = msg->g;
 	colorMsg.b = msg->b;
+	
 	this->mode->updateColor(colorMsg);
 }
 
+// Callback du capteur a ultrason
+// met a jour le MoveMgr et le mode
 void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
 	nxt_msgs::Range rangeMsg = nxt_msgs::Range();
 	rangeMsg.range = msg->range;
@@ -55,10 +72,12 @@ void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
 	rangeMsg.range_max = msg->range_max;
 	rangeMsg.spread_angle = msg->spread_angle;
 
-	// update MoveMgr
 	this->mm->updateRange(rangeMsg);
+	this->mode->updateRange(rangeMsg);
 }
 
+// Callback de l'interface utilisateur
+// donne des ordres au mode ou au MoveMgr (contrôle manuel ou non)
 void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 	// actions commandee par l'utilisateur
 	// cf ${ProjectDir}/msg/Order.msg
