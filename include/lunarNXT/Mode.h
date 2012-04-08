@@ -6,22 +6,30 @@
 #include "lunarNXT/MoveMgr.h"
 
 // Model de tout les modes.
-// Un mode aura ces carracteristiques
+// Un mode aura ces carracteristiques :
 class Mode : public Receptor {
 private:
 	bool launched;
 	bool initialized;
 
 protected:
+	// Gestion des deplacements
 	MoveMgr* mm;
+	// getters
 	bool isLaunched();
 	bool isInitialized();
+	
+	// setter
 	void setInitialized(bool init);
+	
+	// Fonction de traitement du mode (fonction virtuelle pure)
 	virtual void treat() =0;
 public:
+	// constructeur & destructeur
 	Mode(MoveMgr* mm);
 	virtual ~Mode();
 
+	// methodes de lancement et d'arrêt du mode
 	void launch();
 	void unlaunch();
 };
