@@ -12,15 +12,15 @@ BaseOdometry::BaseOdometry() {
 	this->initialized = false;
 }
 
-nav_msgs::Odometry BaseOdometry::update(sensor_msgs::JointState msg) {
+nav_msgs::Odometry BaseOdometry::update(const sensor_msgs::JointState::ConstPtr msg) {
 	std::vector<float> leftPos = std::vector<float>();
 	std::vector<float> rightPos = std::vector<float>();
 	
-	for (unsigned int i = 0; i < msg.position.size(); i++) {
-		if (msg.name.at(i) == "motor_l")
-			leftPos.push_back(msg.position.at(i));
-		else if (msg.name.at(i) == "motor_r")
-			leftPos.push_back(msg.position.at(i));
+	for (unsigned int i = 0; i < msg->position.size(); i++) {
+		if (msg->name.at(i) == "motor_l")
+			leftPos.push_back(msg->position.at(i));
+		else if (msg->name.at(i) == "motor_r")
+			leftPos.push_back(msg->position.at(i));
 	}
 	
 	if (!this->initialized) {

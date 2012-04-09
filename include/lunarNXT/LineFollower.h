@@ -27,7 +27,7 @@ public:
 	// constructeurs et destructeur
 	LineFollower();
 	LineFollower(MoveMgr* mm);
-	void updateColor(nxt_msgs::Color msg);
+	void updateColor(const nxt_msgs::Color::ConstPtr msg);
 };
 
 #endif

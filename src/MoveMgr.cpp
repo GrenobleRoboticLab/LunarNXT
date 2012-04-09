@@ -61,22 +61,22 @@ void MoveMgr::stop() {
 }
 
 // Mise a jour de la position et de l'effort actuelle des Moteurs
-void MoveMgr::updateMotors(sensor_msgs::JointState msg) {
-	if (this->getNameLeftMotor() == msg.name.back()) {
-        	this->leftPosition = msg.position.back();
-        	this->leftEffort = msg.effort.back();
+void MoveMgr::updateMotors(const sensor_msgs::JointState::ConstPtr msg) {
+	if (this->getNameLeftMotor() == msg->name.back()) {
+        	this->leftPosition = msg->position.back();
+        	this->leftEffort = msg->effort.back();
 	}
-	else if (this->getNameRightMotor() == msg.name.back()) {
-		this->rightPosition = msg.position.back();
-		this->rightEffort = msg.effort.back();
+	else if (this->getNameRightMotor() == msg->name.back()) {
+		this->rightPosition = msg->position.back();
+		this->rightEffort = msg->effort.back();
 	}
 	this->checkGoal();
 }
 
 // Mise a jour du capteur a ultrason
 // stope les moteurs en cas de proximite
-void MoveMgr::updateRange(nxt_msgs::Range msg) {
-        if (msg.range < MINRANGE) this->stop();
+void MoveMgr::updateRange(const nxt_msgs::Range::ConstPtr msg) {
+        if (msg->range < MINRANGE) this->stop();
 }
 
 // publie les efforts desires aux moteurs

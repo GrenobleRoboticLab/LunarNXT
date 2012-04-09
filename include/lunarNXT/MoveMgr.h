@@ -45,8 +45,8 @@ public:
         void stop();
 
         // MaJ des capteurs
-        void updateMotors(sensor_msgs::JointState msg);
-        void updateRange(nxt_msgs::Range msg);
+        void updateMotors(const sensor_msgs::JointState::ConstPtr msg);
+        void updateRange(const nxt_msgs::Range::ConstPtr msg);
         
         // Getters
         float getLeftPos();

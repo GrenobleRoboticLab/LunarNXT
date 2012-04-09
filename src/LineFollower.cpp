@@ -9,15 +9,19 @@ LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
 }
 
 // Mise a jour du capteur de couleurs
-void LineFollower::updateColor(nxt_msgs::Color msg) {
-	this->colorMsg = msg;
+void LineFollower::updateColor(const nxt_msgs::Color::ConstPtr msg) {
+	this->colorMsg = nxt_msgs::Color();
+	this->colorMsg.r = msg->r;
+	this->colorMsg.g = msg->g;
+	this->colorMsg.b = msg->b;
+
 	if (this->isInitialized()) {
 		this->treat();
 	}
 	else if (this->isLaunched()) {
-		this->color[0] = colorMsg.r;
-		this->color[1] = colorMsg.g;
-		this->color[2] = colorMsg.b;
+		this->color[0] = msg->r;
+		this->color[1] = msg->g;
+		this->color[2] = msg->b;
 
 		this->setInitialized(true);
 		this->online = true;

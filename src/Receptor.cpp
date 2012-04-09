@@ -16,14 +16,14 @@ std::string Receptor::getNameLeftMotor() { return this->nameLeftMotor; }
 std::string Receptor::getNameRightMotor() { return this->nameRightMotor; }
 
 // Touch sensor updaters
-void Receptor::updateRightTouch(nxt_msgs::Contact msg) { ; }
-void Receptor::updateLeftTouch(nxt_msgs::Contact msg) { ; }
+void Receptor::updateRightTouch(const nxt_msgs::Contact::ConstPtr msg) { ; }
+void Receptor::updateLeftTouch(const nxt_msgs::Contact::ConstPtr msg) { ; }
 
 // Range sensor updater
-void Receptor::updateRange(nxt_msgs::Range msg) { ; }
+void Receptor::updateRange(const nxt_msgs::Range::ConstPtr msg) { ; }
 
 // Color sensor updater
-void Receptor::updateColor(nxt_msgs::Color msg) { ; }
+void Receptor::updateColor(const nxt_msgs::Color::ConstPtr msg) { ; }
 
 // Motors updater
-void Receptor::updateMotors(sensor_msgs::JointState msg) { ; }
+void Receptor::updateMotors(const sensor_msgs::JointState::ConstPtr msg) { ; }

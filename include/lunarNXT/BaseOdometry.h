@@ -28,7 +28,7 @@ private:
 	ros::Publisher publisher;
 public:
 	BaseOdometry();
-	nav_msgs::Odometry update(sensor_msgs::JointState msg);
+	nav_msgs::Odometry update(const sensor_msgs::JointState::ConstPtr msg);
 	
 };
 

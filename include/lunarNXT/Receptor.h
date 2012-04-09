@@ -25,17 +25,17 @@ public:
 	virtual ~Receptor();
 
 	// Touch sensor updaters
-	virtual void updateRightTouch(nxt_msgs::Contact msg);
-	virtual void updateLeftTouch(nxt_msgs::Contact msg);
+	virtual void updateRightTouch(const nxt_msgs::Contact::ConstPtr msg);
+	virtual void updateLeftTouch(const nxt_msgs::Contact::ConstPtr msg);
 
 	// Range sensor updater
-	virtual void updateRange(nxt_msgs::Range msg);
+	virtual void updateRange(const nxt_msgs::Range::ConstPtr msg);
 
 	// Color sensor updater
-	virtual void updateColor(nxt_msgs::Color msg);
+	virtual void updateColor(const nxt_msgs::Color::ConstPtr msg);
 
 	// Motors updater
-	virtual void updateMotors(sensor_msgs::JointState msg);
+	virtual void updateMotors(const sensor_msgs::JointState::ConstPtr msg);
 };
 
 #endif

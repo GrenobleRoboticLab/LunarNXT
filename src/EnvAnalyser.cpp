@@ -21,66 +21,41 @@ EnvAnalyser::~EnvAnalyser() {
 // Callback du topic JointState
 // Met a jour le MoveMgr
 void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
-	sensor_msgs::JointState motorMsg = sensor_msgs::JointState();
-	motorMsg.name = msg->name;
-	motorMsg.position = msg->position;
-	motorMsg.effort = msg->effort;
-	motorMsg.velocity = msg->velocity;
-
 	// update BaseOdometry
-	this->bo.update(motorMsg);
-
+	this->bo.update(msg);
 	// update MoveMgr
-	this->mm->updateMotors(motorMsg);
+	this->mm->updateMotors(msg);
 }
 
 // Callback du capteur de contact droit
 // met a jour le mode
 void EnvAnalyser::rightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
-	nxt_msgs::Contact contactMsg = nxt_msgs::Contact();
-	contactMsg.contact = msg->contact;
-	this->mode->updateRightTouch(contactMsg);
+	this->mode->updateRightTouch(msg);
 }
 
 // Callback du capteur de contact gauche
 // met a jour le mode
 void EnvAnalyser::leftTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
-	nxt_msgs::Contact contactMsg = nxt_msgs::Contact();
-	contactMsg.contact = msg->contact;
-	this->mode->updateLeftTouch(contactMsg);
+	this->mode->updateLeftTouch(msg);
 }
 
 
 // Callback du capteur de couleur
 // Met a jour le mode
 void EnvAnalyser::colorCallback(const nxt_msgs::Color::ConstPtr& msg) {
-	nxt_msgs::Color colorMsg =  nxt_msgs::Color();
-	colorMsg.intensity = msg->intensity;
-	colorMsg.r = msg->r;
-	colorMsg.g = msg->g;
-	colorMsg.b = msg->b;
-	
-	this->mode->updateColor(colorMsg);
+	this->mode->updateColor(msg);
 }
 
 // Callback du capteur a ultrason
 // met a jour le MoveMgr et le mode
 void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
-	nxt_msgs::Range rangeMsg = nxt_msgs::Range();
-	rangeMsg.range = msg->range;
-	rangeMsg.range_min = msg->range_min;
-	rangeMsg.range_max = msg->range_max;
-	rangeMsg.spread_angle = msg->spread_angle;
-
-	this->mm->updateRange(rangeMsg);
-	this->mode->updateRange(rangeMsg);
+	this->mm->updateRange(msg);
+	this->mode->updateRange(msg);
 }
 
 // Callback de l'interface utilisateur
-// donne des ordres au mode ou au MoveMgr (contrôle manuel ou non)
+// donne des ordres au mode ou au MoveMgr (controle manuel ou non)
 void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
-	// actions commandee par l'utilisateur
-	// cf ${ProjectDir}/msg/Order.msg
 	if (msg->order == "go")
 		this->mm->linearMove(0.8, 1);
 	else if (msg->order == "back")
