@@ -9,7 +9,6 @@ class LunarNXT {
 private:
 	ros::NodeHandle n;
 	std::vector<ros::Subscriber> subs;
-	MoveMgr mm;
 	EnvAnalyser ea;
 
 public:
@@ -17,9 +16,8 @@ public:
 };
 
 LunarNXT::LunarNXT() {
-	ros::Publisher pub = this->n.advertise<nxt_msgs::JointCommand>("joint_command", 5);
-	this->mm = MoveMgr(pub, "motor_l", "motor_r");
-	this->ea = EnvAnalyser(&this->mm);
+        ros::Publisher pub = this->n.advertise<nxt_msgs::JointCommand>("joint_command", 5);
+	this->ea = EnvAnalyser(pub);
 
         this->subs.push_back(n.subscribe("ultrasonic_sensor", 5, &EnvAnalyser::ultrasonicCallback, &this->ea));
         this->subs.push_back(n.subscribe("joint_state", 5, &EnvAnalyser::motorCallback, &this->ea));
@@ -27,6 +25,7 @@ LunarNXT::LunarNXT() {
         this->subs.push_back(n.subscribe("touch_l", 5, &EnvAnalyser::leftTouchCallback, &this->ea));
         this->subs.push_back(n.subscribe("touch_r", 5, &EnvAnalyser::rightTouchCallback, &this->ea));
         this->subs.push_back(n.subscribe("ui_publish", 5, &EnvAnalyser::uiCallback, &this->ea));
+
 }
 
 int main(int argc, char** argv) {

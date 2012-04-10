@@ -25,7 +25,8 @@ protected:
 	// Fonction de traitement du mode (fonction virtuelle pure)
 	virtual void treat() =0;
 public:
-	// constructeur & destructeur
+	// constructeurs & destructeur
+	Mode();
 	Mode(MoveMgr* mm);
 	virtual ~Mode();
 

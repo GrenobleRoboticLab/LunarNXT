@@ -20,6 +20,7 @@ MoveMgr::~MoveMgr() {
 
 // Mouvement lineaire infini ver l'avant ou l'arriere
 void MoveMgr::linearMove(float effort) {
+	ROS_INFO("lmove");
         this->publish(effort, effort);
 }
 
@@ -61,34 +62,35 @@ void MoveMgr::stop() {
 }
 
 // Mise a jour de la position et de l'effort actuelle des Moteurs
-void MoveMgr::updateMotors(const sensor_msgs::JointState::ConstPtr msg) {
-	if (this->getNameLeftMotor() == msg->name.back()) {
-        	this->leftPosition = msg->position.back();
-        	this->leftEffort = msg->effort.back();
+void MoveMgr::updateMotors(sensor_msgs::JointState msg) {
+	if (this->getNameLeftMotor() == msg.name.back()) {
+        	this->leftPosition = msg.position.back();
+        	this->leftEffort = msg.effort.back();
 	}
-	else if (this->getNameRightMotor() == msg->name.back()) {
-		this->rightPosition = msg->position.back();
-		this->rightEffort = msg->effort.back();
+	else if (this->getNameRightMotor() == msg.name.back()) {
+		this->rightPosition = msg.position.back();
+		this->rightEffort = msg.effort.back();
 	}
 	this->checkGoal();
 }
 
 // Mise a jour du capteur a ultrason
 // stope les moteurs en cas de proximite
-void MoveMgr::updateRange(const nxt_msgs::Range::ConstPtr msg) {
-        if (msg->range < MINRANGE) this->stop();
+void MoveMgr::updateRange(nxt_msgs::Range msg) {
+        if (msg.range < MINRANGE) this->stop();
 }
 
 // publie les efforts desires aux moteurs
 void MoveMgr::publish(float leftEffort, float rightEffort) {
         this->desiredLeftEffort = leftEffort;
         this->desiredRightEffort = rightEffort;
+
         nxt_msgs::JointCommand leftCommand = nxt_msgs::JointCommand();
         nxt_msgs::JointCommand rightCommand = nxt_msgs::JointCommand();
 
         leftCommand.name = this->getNameLeftMotor();
         leftCommand.effort = leftEffort;
-
+	
         rightCommand.name = this->getNameRightMotor();
         rightCommand.effort = rightEffort;
 

@@ -9,21 +9,21 @@ Receptor::Receptor(std::string nameLeftMotor, std::string nameRightMotor) {
 }
 
 // destructeur
-Receptor::~Receptor() { ROS_INFO("Receptor deleted"); }
+Receptor::~Receptor() { }
 
 // Getters
 std::string Receptor::getNameLeftMotor() { return this->nameLeftMotor; }
 std::string Receptor::getNameRightMotor() { return this->nameRightMotor; }
 
 // Touch sensor updaters
-void Receptor::updateRightTouch(const nxt_msgs::Contact::ConstPtr msg) { ; }
-void Receptor::updateLeftTouch(const nxt_msgs::Contact::ConstPtr msg) { ; }
+void Receptor::updateRightTouch(nxt_msgs::Contact msg) { ; }
+void Receptor::updateLeftTouch(nxt_msgs::Contact msg) { ; }
 
 // Range sensor updater
-void Receptor::updateRange(const nxt_msgs::Range::ConstPtr msg) { ; }
+void Receptor::updateRange(nxt_msgs::Range msg) { ; }
 
 // Color sensor updater
-void Receptor::updateColor(const nxt_msgs::Color::ConstPtr msg) { ; }
+void Receptor::updateColor(nxt_msgs::Color msg) { ; }
 
 // Motors updater
-void Receptor::updateMotors(const sensor_msgs::JointState::ConstPtr msg) { ; }
+void Receptor::updateMotors(sensor_msgs::JointState msg) { ; }

@@ -15,16 +15,15 @@
 class EnvAnalyser {
 private:
 	// Gestion du mode et des deplacements du robot
-	MoveMgr* mm;
+	MoveMgr mm;
 	Mode* mode;
-	
 	// testing
 	BaseOdometry bo;
 
 public:
 	// Construsteurs et destructeur
 	EnvAnalyser();
-	EnvAnalyser(MoveMgr* mm);
+	EnvAnalyser(ros::Publisher pub);
 	~EnvAnalyser();
 
 	// Callbacks des capteurs
