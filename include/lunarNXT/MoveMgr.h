@@ -7,7 +7,7 @@
 class MoveMgr : public Receptor {
 private:
         // publisher donnant les ordres aux moteurs
-        ros::Publisher publisher;
+        ros::Publisher* publisher;
 
         // gestion du but (rotation ou déplacement finit)
         bool hasGoal;
@@ -29,7 +29,7 @@ private:
 public:
         // constructeurs & destructeur
         MoveMgr();
-        MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName);
+        MoveMgr(ros::Publisher* publisher, std::string leftName, std::string rightName);
         ~MoveMgr();
 
         // Deplacement infinit /!\ doit etre stope manuellement

@@ -22,7 +22,7 @@ void Mode::setInitialized(bool init) { this->initialized = init; }
 void Mode::launch() {
         this->launched = true;
         this->initialized = false;
-};
+}
 
 
 // Methode d'arret du mode
@@ -31,6 +31,6 @@ void Mode::unlaunch() {
         this->launched = false;
         this->initialized = false;
 	this->mm->stop();
-};
+}
 
 

@@ -23,7 +23,7 @@ private:
 public:
 	// Construsteurs et destructeur
 	EnvAnalyser();
-	EnvAnalyser(ros::Publisher pub);
+	EnvAnalyser(ros::Publisher* pub);
 	~EnvAnalyser();
 
 	// Callbacks des capteurs

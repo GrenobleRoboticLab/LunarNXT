@@ -8,7 +8,7 @@
 // Constructeur
 MoveMgr::MoveMgr() { }
 
-MoveMgr::MoveMgr(ros::Publisher publisher, std::string leftName, std::string rightName) : Receptor(leftName, rightName) {
+MoveMgr::MoveMgr(ros::Publisher* publisher, std::string leftName, std::string rightName) : Receptor(leftName, rightName) {
         this->publisher = publisher;
         this->hasGoal = false;
 }
@@ -94,8 +94,8 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
         rightCommand.name = this->getNameRightMotor();
         rightCommand.effort = rightEffort;
 
-        this->publisher.publish(leftCommand);
-        this->publisher.publish(rightCommand);
+        this->publisher->publish(leftCommand);
+        this->publisher->publish(rightCommand);
 }
 
 // verifie si les moteurs ont atteint les positions desirees

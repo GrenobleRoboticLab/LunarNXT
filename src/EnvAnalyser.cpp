@@ -5,7 +5,7 @@
 
 // Constructeurs
 EnvAnalyser::EnvAnalyser() { ; }
-EnvAnalyser::EnvAnalyser(ros::Publisher pub) {
+EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
 	this->mm = MoveMgr(pub, "motor_l", "motor_r");
 	this->bo = BaseOdometry();
 	this->mode = new LineFollower(&mm);
