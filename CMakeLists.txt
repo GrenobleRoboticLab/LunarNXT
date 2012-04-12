@@ -25,6 +25,7 @@ rosbuild_genmsg()
 rosbuild_add_library(lunar_lib src/LineFollower.cpp src/MoveMgr.cpp src/EnvAnalyser.cpp src/BaseOdometry.cpp src/Receptor.cpp src/Mode.cpp)
 rosbuild_add_executable(launcher src/lunarNXT_launcher.cpp)
 rosbuild_add_executable(commander src/lunarNXT_commander.cpp)
+
 target_link_libraries(launcher lunar_lib)
 
 #target_link_libraries(${PROJECT_NAME} another_library)

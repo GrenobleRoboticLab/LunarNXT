@@ -12,7 +12,7 @@ EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
 }
 
 // destructeur
-EnvAnalyser::~EnvAnalyser() { ; }
+EnvAnalyser::~EnvAnalyser() { delete this->mode; }
 
 // Callback du topic JointState
 // Met a jour le MoveMgr
@@ -27,6 +27,9 @@ void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
 	this->bo.update(_msg);
 	// update MoveMgr
 	this->mm.updateMotors(_msg);
+
+	/// pure test
+	// pthread_create(&threads[0], NULL, &EnvAnalyser::motorsT, new EnvAnalyser::processEventArgs(this->mode, &this->mm, &_msg, MOTOR));
 }
 
 // Callback du capteur de contact droit
@@ -87,4 +90,34 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 		this->mode->launch();
 	else if (msg->order == "no_line")
 		this->mode->unlaunch();
+}
+
+void *EnvAnalyser::motorsT(void* msg) {
+	EnvAnalyser::processEventArgs* arg =  (EnvAnalyser::processEventArgs*)msg;
+	
+	switch (arg->id_thread) {
+		case MOTOR:
+			arg->recs[0]->updateMotors(*(sensor_msgs::JointState*)arg->msg);
+			arg->recs[1]->updateMotors(*(sensor_msgs::JointState*)arg->msg);
+			break;
+		case COLOR:
+			arg->recs[0]->updateColor(*(nxt_msgs::Color*)arg->msg);
+                        arg->recs[1]->updateColor(*(nxt_msgs::Color*)arg->msg);
+			break;
+		case TOUCH_L:
+			arg->recs[0]->updateLeftTouch(*(nxt_msgs::Contact*)arg->msg);
+                        arg->recs[1]->updateLeftTouch(*(nxt_msgs::Contact*)arg->msg);
+			break;
+		case TOUCH_R:
+			arg->recs[0]->updateRightTouch(*(nxt_msgs::Contact*)arg->msg);
+                        arg->recs[1]->updateRightTouch(*(nxt_msgs::Contact*)arg->msg);
+			break;
+		case ULTRASONIC:
+			arg->recs[0]->updateRange(*(nxt_msgs::Range*)arg->msg);
+                        arg->recs[1]->updateRange(*(nxt_msgs::Range*)arg->msg);
+			break;
+		default: break;
+	}
+	
+	pthread_exit(NULL);
 }
