@@ -1,5 +1,5 @@
 #include "lunarNXT/EnvAnalyser.h"
-#include "nxt_msgs/JointCommand.h"
+// #include "nxt_msgs/JointCommand.h"
 
 #include "lunarNXT/LineFollower.h"
 
