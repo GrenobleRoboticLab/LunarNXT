@@ -8,9 +8,6 @@ Mode::Mode(MoveMgr* mm) : Receptor(mm->getNameLeftMotor(), mm->getNameRightMotor
 	this->initialized = false;
 }
 
-// Destructeur
-Mode::~Mode() { ; }
-
 // Getters
 bool Mode::isLaunched()    { return this->launched; }
 bool Mode::isInitialized() { return this->initialized; }

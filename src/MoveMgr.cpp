@@ -14,9 +14,7 @@ MoveMgr::MoveMgr(ros::Publisher* publisher, std::string leftName, std::string ri
 }
 
 // Destructeur
-MoveMgr::~MoveMgr() {
-        this->stop();
-}
+MoveMgr::~MoveMgr() { ; }
 
 // Mouvement lineaire infini ver l'avant ou l'arriere
 void MoveMgr::linearMove(float effort) {
@@ -94,8 +92,8 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
         rightCommand.name = this->getNameRightMotor();
         rightCommand.effort = rightEffort;
 
-        this->publisher->publish(leftCommand);
-        this->publisher->publish(rightCommand);
+        this->publisher->publish(nxt_msgs::JointCommandPtr(&leftCommand));
+        this->publisher->publish(nxt_msgs::JointCommandPtr(&rightCommand));
 }
 
 // verifie si les moteurs ont atteint les positions desirees

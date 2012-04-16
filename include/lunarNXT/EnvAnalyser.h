@@ -19,8 +19,6 @@ private:
 	// Gestion du mode et des deplacements du robot
 	MoveMgr mm;
 	Mode* mode;
-	// testing
-	BaseOdometry bo;
 
 	pthread_t threads[NB_THREADS];
 

@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 	ros::init(argc, argv, "lunarNXT");
 	ros::NodeHandle n;
 	
-	LunarNXT myRobot = LunarNXT();
+	LunarNXT myRobot;
 	
 	ros::spin();
 	

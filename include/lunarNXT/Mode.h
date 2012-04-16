@@ -28,7 +28,6 @@ public:
 	// constructeurs & destructeur
 	Mode();
 	Mode(MoveMgr* mm);
-	virtual ~Mode();
 
 	// methodes de lancement et d'arrêt du mode
 	void launch();

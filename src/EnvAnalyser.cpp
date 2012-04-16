@@ -1,5 +1,4 @@
 #include "lunarNXT/EnvAnalyser.h"
-// #include "nxt_msgs/JointCommand.h"
 
 #include "lunarNXT/LineFollower.h"
 
@@ -7,12 +6,11 @@
 EnvAnalyser::EnvAnalyser() { ; }
 EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
 	this->mm = MoveMgr(pub, "motor_l", "motor_r");
-	this->bo = BaseOdometry();
-	this->mode = new LineFollower(&mm);
+	this->mode = new LineFollower(&this->mm);
 }
 
 // destructeur
-EnvAnalyser::~EnvAnalyser() { delete this->mode; }
+EnvAnalyser::~EnvAnalyser() { ; }
 
 // Callback du topic JointState
 // Met a jour le MoveMgr
@@ -23,8 +21,6 @@ void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
 	_msg.position = msg->position;
 	_msg.effort = msg->effort;
 
-	// update BaseOdometry
-	this->bo.update(_msg);
 	// update MoveMgr
 	this->mm.updateMotors(_msg);
 

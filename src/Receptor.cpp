@@ -8,9 +8,6 @@ Receptor::Receptor(std::string nameLeftMotor, std::string nameRightMotor) {
 	this->nameRightMotor = nameRightMotor;
 }
 
-// destructeur
-Receptor::~Receptor() { }
-
 // Getters
 std::string Receptor::getNameLeftMotor() { return this->nameLeftMotor; }
 std::string Receptor::getNameRightMotor() { return this->nameRightMotor; }

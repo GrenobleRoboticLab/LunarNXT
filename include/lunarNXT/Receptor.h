@@ -22,7 +22,6 @@ public:
 	// Constructeurs & destructeur
 	Receptor();
 	Receptor(std::string nameLeftMotor, std::string nameRightMotor);
-	virtual ~Receptor();
 
 	// Touch sensor updaters
 	virtual void updateRightTouch(nxt_msgs::Contact msg);
