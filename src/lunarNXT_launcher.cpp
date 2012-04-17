@@ -16,8 +16,7 @@ public:
 };
 
 LunarNXT::LunarNXT() {
-        ros::Publisher pub = this->n.advertise<nxt_msgs::JointCommand>("joint_command", 5);
-	this->ea = EnvAnalyser(&pub);
+	this->ea = EnvAnalyser(n);
 
         this->subs.push_back(n.subscribe("ultrasonic_sensor", 5, &EnvAnalyser::ultrasonicCallback, &this->ea));
         this->subs.push_back(n.subscribe("joint_state", 5, &EnvAnalyser::motorCallback, &this->ea));

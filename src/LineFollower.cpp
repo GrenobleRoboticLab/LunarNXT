@@ -6,6 +6,7 @@ LineFollower::LineFollower() : Mode() { }
 LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
 	this->online = false;
 	this->direction = "left";
+
 }
 
 // Mise a jour du capteur de couleurs
@@ -30,35 +31,29 @@ void LineFollower::treat() {
 		colorMsg.g == this->color[1] && 
 		colorMsg.b == this->color[2]) 
 	{
-		this->mm->stop();
+		this->getMm()->stop();
 		this->online = true;
-		this->mm->linearMove(0.8);
+		this->getMm()->linearMove(0.8);
 	}
 	else {
 		if(this->direction == "left") {
 			if (this->online) {
-				this->mm->turn(0.8, 0.5);
-				this->online = false;
+				this->getMm()->turn(0.8, 0.5);
+				this->online = false;	
 			}
-			if(!this->mm->hasGoalSet()) {
+			if(!this->getMm()->hasGoalSet()) {
 				this->direction = "right";
-				this->mm->turn(0.8, -1);
-				if(!this->mm->hasGoalSet()) {
-					this->unlaunch();
-				}
+				this->getMm()->turn(0.7, -1);
 			}
 		}
 		else if(this->direction == "right") {
 			if (this->online) {
-				this->mm->turn(0.8, -0.5);
+				this->getMm()->turn(0.8, -0.5);
 				this->online = false;
 			}
-			if(!this->mm->hasGoalSet()) {
+			if(!this->getMm()->hasGoalSet()) {
 				this->direction = "left";
-				this->mm->turn(0.8, 1);
-				if(!this->mm->hasGoalSet()) {
-					this->unlaunch();
-				}
+				this->getMm()->turn(0.7, 1);	
 			}
 		}
 	}

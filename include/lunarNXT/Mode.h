@@ -11,10 +11,11 @@ class Mode : public Receptor {
 private:
 	bool launched;
 	bool initialized;
+	MoveMgr* mm;
 
 protected:
 	// Gestion des deplacements
-	MoveMgr* mm;
+	// MoveMgr* mm;
 	// getters
 	bool isLaunched();
 	bool isInitialized();
@@ -28,6 +29,7 @@ public:
 	// constructeurs & destructeur
 	Mode();
 	Mode(MoveMgr* mm);
+	MoveMgr* getMm();
 
 	// methodes de lancement et d'arrêt du mode
 	void launch();

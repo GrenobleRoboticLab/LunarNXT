@@ -12,19 +12,19 @@ nxt_robot:
   - type: motor
     name: motor_color
     port: PORT_C
-    desired_frequency: 20.0
+    desired_frequency: 1.0
 
   - type: touch
     frame_id: touch_frame
     name: touch_l
     port: PORT_1
-    desired_frequency: 2.0 
+    desired_frequency: 1.0 
 
   - type: touch
     frame_id: touch_frame
     name: touch_r
     port: PORT_2
-    desired_frequency: 2.0
+    desired_frequency: 1.0
 
   - type: ultrasonic
     frame_id: ultrasonic_link
@@ -37,6 +37,6 @@ nxt_robot:
 
   - type: color
     port: PORT_4
-    desired_frequency: 10.0
+    desired_frequency: 20.0
     name: color_frame
     frame_id: color_frame

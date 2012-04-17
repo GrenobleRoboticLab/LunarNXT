@@ -17,7 +17,7 @@
 class EnvAnalyser {
 private:
 	// Gestion du mode et des deplacements du robot
-	MoveMgr mm;
+	MoveMgr* mm;
 	Mode* mode;
 
 	pthread_t threads[NB_THREADS];
@@ -48,7 +48,7 @@ private:
 public:
 	// Construsteurs et destructeur
 	EnvAnalyser();
-	EnvAnalyser(ros::Publisher* pub);
+	EnvAnalyser(ros::NodeHandle pub);
 	~EnvAnalyser();
 
 	// Callbacks des capteurs

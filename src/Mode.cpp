@@ -30,4 +30,4 @@ void Mode::unlaunch() {
 	this->mm->stop();
 }
 
-
+MoveMgr* Mode::getMm() { return this->mm; }
