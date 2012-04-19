@@ -1,29 +1,27 @@
-#ifndef LINEFOLLOWER_H
-#define LINEFOLLOWER_H
+#ifndef LINEFINDER_H
+#define LINEFINDER_H
 
 #include "lunarNXT/Mode.h"
-
 #include "lunarNXT/Map.h"
 
 #include "nxt_msgs/Color.h"
-#include "nxt_msgs/Range.h"
 
 
-class LineFollower : public Mode {
+class LineFinder : public Mode {
 private:
 	// Attributs
 	nxt_msgs::Color colorMsg;
-	float color[3];
+	float lineColor[3];
 	bool online;
-	Map::Cardinal orientation;
+	Map::Cardinal* orientation;
 
 	// traitement du mode
 	void treat();	
 	
 public:
 	// constructeurs et destructeur
-	LineFollower();
-	LineFollower(MoveMgr* mm);
+	LineFinder();
+	LineFinder(MoveMgr* mm, Map::Cardinal* orientation);
 	void updateColor(nxt_msgs::Color msg);
 };
 

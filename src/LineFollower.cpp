@@ -5,7 +5,7 @@ LineFollower::LineFollower() : Mode() { }
 
 LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
 	this->online = false;
-	this->direction = "left";
+	this->orientation = Map::WEST;
 
 }
 
@@ -36,25 +36,28 @@ void LineFollower::treat() {
 		this->getMm()->linearMove(0.8);
 	}
 	else {
-		if(this->direction == "left") {
-			if (this->online) {
-				this->getMm()->turn(0.72, 0.5);
-				this->online = false;	
-			}
-			if(!this->getMm()->hasGoalSet()) {
-				this->direction = "right";
-				this->getMm()->turn(0.72, -1);
-			}
-		}
-		else if(this->direction == "right") {
-			if (this->online) {
-				this->getMm()->turn(0.72, -0.5);
-				this->online = false;
-			}
-			if(!this->getMm()->hasGoalSet()) {
-				this->direction = "left";
-				this->getMm()->turn(0.72, 1);	
-			}
+		switch(this->orientation) {
+			case Map::WEST:
+	                        if (this->online) {
+        	                        this->getMm()->turn(0.72, 0.5);
+                	                this->online = false;
+                        	}
+                        	if(!this->getMm()->hasGoalSet()) {
+                       		        this->orientation = Map::EAST;
+                        	        this->getMm()->turn(0.72, -1);
+                        	}
+				break;
+			case Map::EAST:
+                        	if (this->online) {
+                       		        this->getMm()->turn(0.72, -0.5);
+                        		this->online = false;
+                        	}
+                       		if(!this->getMm()->hasGoalSet()) {
+                        	        this->orientation = Map::WEST;
+                        		this->getMm()->turn(0.72, 1);
+                        	}
+				break;
+			default: break;
 		}
 	}
 }
