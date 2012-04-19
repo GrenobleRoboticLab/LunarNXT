@@ -55,7 +55,6 @@ void MoveMgr::turn(float effort, float rad) {
 // stope tout deplacement (fini et infini) en cours
 void MoveMgr::stop() {
         this->hasGoal = false;
-	ROS_INFO("STOP");
         this->publish(0, 0);
 }
 
@@ -80,7 +79,6 @@ void MoveMgr::updateRange(nxt_msgs::Range msg) {
 
 // publie les efforts desires aux moteurs
 void MoveMgr::publish(float leftEffort, float rightEffort) {
-	ROS_INFO("%x", this);
         this->desiredLeftEffort = leftEffort;
         this->desiredRightEffort = rightEffort;
 
@@ -93,8 +91,8 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
         rightCommand.name = this->getNameRightMotor();
         rightCommand.effort = rightEffort;
 
-	this->publisher.publish(leftCommand);// nxt_msgs::JointCommandPtr(&leftCommand));
-        this->publisher.publish(rightCommand);// nxt_msgs::JointCommandPtr(&rightCommand));
+	this->publisher.publish(leftCommand);
+        this->publisher.publish(rightCommand);
 
 }
 

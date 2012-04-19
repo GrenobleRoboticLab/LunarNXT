@@ -23,7 +23,9 @@ public:
                 WEST
         };
 
-	void appendElement(MapElement element);
+	bool appendElement(MapElement element);
+	bool appendElement(MapElement element, unsigned int line, unsigned int col);
+	
 	std::vector<std::vector<MapElement> > getMap();
 	void setOrientation(Cardinal orientation);
 private:
@@ -31,6 +33,11 @@ private:
         Cardinal orientation;
 
         unsigned int currentLine, currentCol;
+
+	void col_push_back();
+	void line_push_back();
+	void col_push_front();
+	void line_push_front();
 };
 
 #endif
