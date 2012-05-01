@@ -1,9 +1,12 @@
 #include "lunarNXT/Map.h"
 
-Map::Map() { ; }
+Map::Map() { 
+	this->orientation = EAST;
+	this->map = std::vector<std::vector<MapElement *> >();
+}
 Map::~Map() { ; }
 
-bool Map::appendElement(MapElement element) {
+bool Map::appendElement() {
 	switch (this->orientation) {
 		case NORD:
 			if (this->currentLine == 0)
@@ -28,40 +31,40 @@ bool Map::appendElement(MapElement element) {
 				this->currentCol--;
 			break;
 	}
-	return this->appendElement(element, this->currentLine, this->currentCol);
+	return this->appendElement(this->currentLine, this->currentCol);
 }
 
-bool Map::appendElement(MapElement element, unsigned int line, unsigned int col) {
-	if (this->map[line][col] == UNKNOW) {
-		this->map[line][col] = element;
+bool Map::appendElement(unsigned int line, unsigned int col) {
+	if (this->map[line][col] == NULL) {
+		this->map[line][col] = new MapElement(this->orientation);
 		return true;
 	}
 	return false;
 }
 
-std::vector<std::vector<Map::MapElement> > Map::getMap() { return this->map; }
+std::vector<std::vector<Map::MapElement *> > Map::getMap() { return this->map; }
 void Map::setOrientation(Cardinal orientation) { this->orientation = orientation; }
 
 void Map::col_push_back() {
 	for (unsigned int i = 0; i < this->map.size(); i++)
-		this->map[i].push_back(UNKNOW);
+		this->map[i].push_back(NULL);
 }
 
 void Map::line_push_back() {
-	this->map.push_back(std::vector<Map::MapElement>());
+	this->map.push_back(std::vector<MapElement *>());
         for (unsigned int i = 0; i < this->map[0].size(); i++) 
-                this->map.back().push_back(UNKNOW);
+                this->map.back().push_back(NULL);
 }
 
 void Map::col_push_front() {
         for (unsigned int i = 0; i < this->map.size(); i++) 
-                this->map[i].insert(this->map[i].begin(), UNKNOW);
+                this->map[i].insert(this->map[i].begin(), NULL);
 }
 
 void Map::line_push_front() {
-        this->map.insert(this->map.begin(), std::vector<Map::MapElement>());
+        this->map.insert(this->map.begin(), std::vector<MapElement *>());
         for (unsigned int i = 0; i < this->map[1].size(); i++)
-                this->map.front().push_back(UNKNOW);
+                this->map.front().push_back(NULL);
 
 }
 

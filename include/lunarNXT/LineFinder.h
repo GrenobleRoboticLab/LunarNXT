@@ -12,17 +12,22 @@ private:
 	// Attributs
 	nxt_msgs::Color colorMsg;
 	float lineColor[3];
-	bool online;
-	Map::Cardinal* orientation;
 
+	bool started;
+	int checkCount;
+
+	Map::Cardinal* orientation;
+	Map::MapElement* cross;
 	// traitement du mode
-	void treat();	
 	
+	void treat();	
+	void record(int weight);	
 public:
 	// constructeurs et destructeur
 	LineFinder();
-	LineFinder(MoveMgr* mm, Map::Cardinal* orientation);
+	LineFinder(MoveMgr* mm);
 	void updateColor(nxt_msgs::Color msg);
+	void init(Map::Cardinal* orientation, Map::MapElement* cross);
 };
 
 #endif

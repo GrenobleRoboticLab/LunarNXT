@@ -9,6 +9,7 @@ class LunarNXT {
 private:
 	ros::NodeHandle n;
 	std::vector<ros::Subscriber> subs;
+	ros::Publisher pub;
 	EnvAnalyser ea;
 
 public:
@@ -16,7 +17,8 @@ public:
 };
 
 LunarNXT::LunarNXT() {
-	this->ea = EnvAnalyser(n);
+	this->pub = n.advertise<nxt_msgs::JointCommand>("joint_command", 5);
+	this->ea = EnvAnalyser(&pub);
 
         this->subs.push_back(n.subscribe("ultrasonic_sensor", 5, &EnvAnalyser::ultrasonicCallback, &this->ea));
         this->subs.push_back(n.subscribe("joint_state", 5, &EnvAnalyser::motorCallback, &this->ea));

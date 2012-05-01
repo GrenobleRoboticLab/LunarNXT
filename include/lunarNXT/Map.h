@@ -8,13 +8,6 @@ class Map {
 public:
 	Map();
 	~Map();
-
-	enum MapElement {
-                UNKNOW,
-                END,
-                CROSS,
-                ROAD
-        };
 	
 	enum Cardinal {
                 NORD,
@@ -23,13 +16,35 @@ public:
                 WEST
         };
 
-	bool appendElement(MapElement element);
-	bool appendElement(MapElement element, unsigned int line, unsigned int col);
+	struct MapElement {
+                int nord_weight, sud_weight, east_weight, west_weight;
+                MapElement(Cardinal c) {
+			nord_weight = sud_weight = east_weight = west_weight = -1;
+			switch(c) {
+				case NORD:
+					sud_weight = 0;
+					break;
+				case SUD:
+					nord_weight = 0;
+					break;
+				case EAST:
+					west_weight = 0;
+					break;
+				case WEST:
+					east_weight = 0;
+					break;
+			}
+        	}
+        };
+
+
+	bool appendElement();
+	bool appendElement(unsigned int line, unsigned int col);
 	
-	std::vector<std::vector<MapElement> > getMap();
+	std::vector<std::vector<MapElement *> > getMap();
 	void setOrientation(Cardinal orientation);
 private:
-	std::vector<std::vector<MapElement> > map;
+	std::vector<std::vector<MapElement *> > map;
         Cardinal orientation;
 
         unsigned int currentLine, currentCol;

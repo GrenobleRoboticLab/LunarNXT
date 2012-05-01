@@ -20,6 +20,8 @@ private:
 	MoveMgr* mm;
 	Mode* mode;
 
+// threads
+/*
 	pthread_t threads[NB_THREADS];
 
         enum cb_type {
@@ -44,11 +46,11 @@ private:
                         recs[1] = r2;
                 }
         };
-
+*/
 public:
 	// Construsteurs et destructeur
 	EnvAnalyser();
-	EnvAnalyser(ros::NodeHandle pub);
+	EnvAnalyser(ros::Publisher* pub);
 	~EnvAnalyser();
 
 	// Callbacks des capteurs
@@ -59,7 +61,8 @@ public:
 	void ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg);
 	void uiCallback(const lunarNXT::Order::ConstPtr& msg);
 
-	static void* motorsT(void *msg);
+	// threads
+	// static void* motorsT(void *msg);
 };
 
 #endif

@@ -8,8 +8,8 @@
 // Constructeur
 MoveMgr::MoveMgr() { }
 
-MoveMgr::MoveMgr(ros::NodeHandle n, std::string leftName, std::string rightName) : Receptor(leftName, rightName) {
-	this->publisher = n.advertise<nxt_msgs::JointCommand>("joint_command", 5);;
+MoveMgr::MoveMgr(ros::Publisher* pub, std::string leftName, std::string rightName) : Receptor(leftName, rightName) {
+	this->publisher = pub;//n.advertise<nxt_msgs::JointCommand>("joint_command", 5);;
         this->hasGoal = false;
 }
 
@@ -91,8 +91,8 @@ void MoveMgr::publish(float leftEffort, float rightEffort) {
         rightCommand.name = this->getNameRightMotor();
         rightCommand.effort = rightEffort;
 
-	this->publisher.publish(leftCommand);
-        this->publisher.publish(rightCommand);
+	this->publisher->publish(leftCommand);
+        this->publisher->publish(rightCommand);
 
 }
 

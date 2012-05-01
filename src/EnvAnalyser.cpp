@@ -4,7 +4,7 @@
 
 // Constructeurs
 EnvAnalyser::EnvAnalyser() { ; }
-EnvAnalyser::EnvAnalyser(ros::NodeHandle pub) {
+EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
 	this->mm = new MoveMgr(pub, "motor_l", "motor_r");
 	this->mode = new LineFollower(mm);
 }
@@ -24,7 +24,7 @@ void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
 	// update MoveMgr
 	this->mm->updateMotors(_msg);
 
-	/// pure test
+	// threads
 	// pthread_create(&threads[0], NULL, &EnvAnalyser::motorsT, new EnvAnalyser::processEventArgs(this->mode, this->mm, &_msg, MOTOR));
 }
 
@@ -88,6 +88,8 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 		this->mode->unlaunch();
 }
 
+// threads
+/*
 void *EnvAnalyser::motorsT(void* msg) {
 	EnvAnalyser::processEventArgs* arg =  (EnvAnalyser::processEventArgs*)msg;
 	
@@ -117,3 +119,4 @@ void *EnvAnalyser::motorsT(void* msg) {
 	
 	pthread_exit(NULL);
 }
+*/
