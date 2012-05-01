@@ -68,3 +68,44 @@ void Map::line_push_front() {
 
 }
 
+int Map::getLeftChoice() {
+	MapElement* current = this->map[this->currentLine][this->currentCol];
+	int ret = 0;
+	switch (this->orientation) {
+		case NORD:
+			if (current->west_weight == 1) ret = 1;
+			else if (current->nord_weight == 1) ret = 0;
+			else if (current->east_weight == 1) ret = -1;
+			else ret = 2;
+			break;
+		case SUD:
+                        if (current->east_weight == 1) ret = 1;
+                        else if (current->sud_weight == 1) ret = 0;
+                        else if (current->west_weight == 1) ret = -1;
+                        else ret = 2;
+			break;
+		case EAST:
+                        if (current->nord_weight == 1) ret = 1;
+                        else if (current->east_weight == 1) ret = 0;
+                        else if (current->sud_weight == 1) ret = -1;
+                        else ret = 2;
+			break;
+		case WEST:
+                        if (current->sud_weight == 1) ret = 1;
+                        else if (current->west_weight == 1) ret = 0;
+                        else if (current->nord_weight == 1) ret = -1;
+                        else ret = 2;
+			break;
+	}
+	return ret;
+}
+
+std::list<int> Map::choicesToLastNode() {
+	std::list<int> ret = std::list<int>();
+	// MapElement* current = this->map[this->currentLine][this->currentCol];
+	return ret;
+}
+
+void Map::getLastEntryToNode(int line, int col, std::list<int>* ret, Cardinal card) {
+
+}
