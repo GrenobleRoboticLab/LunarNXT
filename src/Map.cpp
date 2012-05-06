@@ -39,6 +39,7 @@ bool Map::appendElement(unsigned int line, unsigned int col) {
 		this->map[line][col] = new MapElement(this->orientation);
 		return true;
 	}
+	else this->map[line][col]->ways[(this->orientation + 2) %4] = 0;
 	return false;
 }
 
@@ -69,7 +70,7 @@ void Map::line_push_front() {
 
 }
 
-int Map::getLeftChoice() {
+int Map::getLeftWay() {
 	MapElement* current = this->map[this->currentLine][this->currentCol];
 	int ret = 2;
 	
@@ -79,12 +80,39 @@ int Map::getLeftChoice() {
 	return ret;
 }
 
-std::list<int> Map::choicesToLastNode() {
+std::list<int> Map::waysToLastNode() {
 	std::list<int> ret = std::list<int>();
-	// MapElement* current = this->map[this->currentLine][this->currentCol];
+	
+	unsigned int tempLine = this->currentLine;
+        unsigned int tempCol = this->currentCol;
+
+	Cardinal tempOrientation = this->orientation;
+	MapElement* tempElement = this->map[tempLine][tempCol];
+		
+	while (tempElement->countO() <= 0) {
+		for (int i = tempOrientation + 1; i < tempOrientation + 4; i++)
+			if (tempElement->ways[i%4] == 0)
+				ret.push_back(i - tempOrientation - 2);
+		
+		tempElement->ways[(tempOrientation + 2) % 4] = -1;
+		tempOrientation = (Cardinal)((tempOrientation - ret.back()) % 4);
+	
+		switch (tempOrientation) {
+			case NORD:
+				tempLine--;
+				break;
+			case WEST:
+				tempCol--;
+				break;
+			case SUD:
+				tempLine++;
+				break;
+			case EAST:
+				tempCol++;
+				break;
+		}
+		tempElement = this->map[tempLine][tempCol];
+	}
+
 	return ret;
-}
-
-void Map::getLastEntryToNode(int line, int col, std::list<int>* ret, Cardinal card) {
-
 }
