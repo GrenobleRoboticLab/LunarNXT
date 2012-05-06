@@ -43,6 +43,7 @@ bool Map::appendElement(unsigned int line, unsigned int col) {
 }
 
 std::vector<std::vector<Map::MapElement *> > Map::getMap() { return this->map; }
+
 void Map::setOrientation(Cardinal orientation) { this->orientation = orientation; }
 
 void Map::col_push_back() {
@@ -70,33 +71,11 @@ void Map::line_push_front() {
 
 int Map::getLeftChoice() {
 	MapElement* current = this->map[this->currentLine][this->currentCol];
-	int ret = 0;
-	switch (this->orientation) {
-		case NORD:
-			if (current->west_weight == 1) ret = 1;
-			else if (current->nord_weight == 1) ret = 0;
-			else if (current->east_weight == 1) ret = -1;
-			else ret = 2;
-			break;
-		case SUD:
-                        if (current->east_weight == 1) ret = 1;
-                        else if (current->sud_weight == 1) ret = 0;
-                        else if (current->west_weight == 1) ret = -1;
-                        else ret = 2;
-			break;
-		case EAST:
-                        if (current->nord_weight == 1) ret = 1;
-                        else if (current->east_weight == 1) ret = 0;
-                        else if (current->sud_weight == 1) ret = -1;
-                        else ret = 2;
-			break;
-		case WEST:
-                        if (current->sud_weight == 1) ret = 1;
-                        else if (current->west_weight == 1) ret = 0;
-                        else if (current->nord_weight == 1) ret = -1;
-                        else ret = 2;
-			break;
-	}
+	int ret = 2;
+	
+	for (int i = this->orientation + 1; i < this->orientation + 4; i++)
+		if (current->ways[i%4] == 1) ret = -(i - this->orientation - 2);
+	
 	return ret;
 }
 

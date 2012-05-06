@@ -10,31 +10,34 @@ public:
 	~Map();
 	
 	enum Cardinal {
-                NORD,
-                SUD,
-                EAST,
-                WEST
+                NORD = 0,
+		WEST = 1,
+                SUD = 2,
+                EAST = 3
         };
 
 	struct MapElement {
-                int nord_weight, sud_weight, east_weight, west_weight;
+                int ways[4];
+		int weight;
                 MapElement(Cardinal c) {
-			nord_weight = sud_weight = east_weight = west_weight = -1;
+			weight = 0;
+			for (int i = 0; i < 4; i++) { ways[i] = -1; }
 			switch(c) {
 				case NORD:
-					sud_weight = 0;
+					ways[SUD] = 0;
 					break;
 				case SUD:
-					nord_weight = 0;
+					ways[NORD] = 0;
 					break;
 				case EAST:
-					west_weight = 0;
+					ways[WEST] = 0;
 					break;
 				case WEST:
-					east_weight = 0;
+					ways[EAST] = 0;
 					break;
 			}
         	}
+		int countO() { return (ways[NORD] + ways[WEST] + ways[SUD] + ways[EAST]); }
         };
 
 
