@@ -11,6 +11,10 @@ private:
 	LineFollower* lfo;
 	void treat();
 	std::list<int> choices;
+	
+	nxt_msgs::Color colorMsg;
+	nxt_msgs::Color colorLine;
+	nxt_msgs::Color colorPastille;
 
 public:
 	Navigator();
