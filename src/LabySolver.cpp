@@ -6,7 +6,7 @@ LabySolver::LabySolver() : Mode() { }
 LabySolver::LabySolver(MoveMgr* mm) : Mode(mm) {
 	this->lfo = new LineFollower(mm);
 	this->lfi = new LineFinder(mm);
-	this->nav = new Navigator(mm);
+	this->nav = new Navigator(mm, this->lfo);
 }
 
 LabySolver::~LabySolver() { 
