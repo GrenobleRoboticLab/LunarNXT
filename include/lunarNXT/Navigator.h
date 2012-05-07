@@ -4,6 +4,7 @@
 #include "nxt_msgs/Color.h"
 #include "lunarNXT/LineFollower.h"
 
+// Mode de deplacement sur un environement connu
 class Navigator : public Mode {
 private:
 
