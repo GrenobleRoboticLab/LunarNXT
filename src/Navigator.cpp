@@ -24,23 +24,13 @@ void Navigator::treat() {
 			this->startLineFollower();
 	}
 	else if (Tools::compare_color(&colorMsg, &colorPastille)) {
-			this->lfo->updateColor(this->colorMsg);
+		this->stopLineFollower();
+		if (this->choices.size() > 0)
+			this->applyChoice();
 	}
-	else if (this->choices.size() > 0) {
-		if (this->online) {
+        else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched()) this->unlaunch();
+	else this->lfo->updateColor(this->colorMsg);
 
-			this->stopLineFollower();
-
-			int choice = this->choices.front();
-			this->choices.pop_front();
-
-			if (choice == 0) {
-				this->getMm()->linearMove(0.72, 3);
-			}
-			else { this->getMm()->turn(0.72, (choice * 1.6));}
-		}
-	}
-	else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched()) this->unlaunch();
 }
 
 void Navigator::init(std::list<int> choices) { 
@@ -67,4 +57,14 @@ void Navigator::startLineFollower() {
 void Navigator::stopLineFollower() {
 	this->lfo->unlaunch();
 	this->online = false;
+}
+
+void Navigator::applyChoice() {
+	int choice = this->choices.front();
+        this->choices.pop_front();
+
+       	if (choice == 0)
+        	this->getMm()->linearMove(0.72, 3);
+	else 
+		this->getMm()->turn(0.72, (choice * 1.6));
 }

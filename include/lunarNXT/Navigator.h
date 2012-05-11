@@ -19,6 +19,7 @@ private:
 
 	void startLineFollower();
 	void stopLineFollower();
+	void applyChoice();
 
 public:
 	Navigator();
