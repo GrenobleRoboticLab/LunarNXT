@@ -1,3 +1,4 @@
+#include <list>
 #include "lunarNXT/EnvAnalyser.h"
 #include "lunarNXT/LineFollower.h"
 #include "lunarNXT/LabySolver.h"
@@ -6,7 +7,7 @@
 EnvAnalyser::EnvAnalyser() { ; }
 EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
 	this->mm = new MoveMgr(pub, "motor_l", "motor_r");
-	this->mode = new LineFollower(mm);
+	this->mode = new Navigator(mm, new LineFollower(mm));
 }
 
 // destructeur
@@ -82,8 +83,14 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 		this->mm->turnLeft(0.8);
 	else if (msg->order == "turn_r")
 		this->mm->turnRight(0.8);
-	else if (msg->order == "line")
+	else if (msg->order == "line") {
 		this->mode->launch();
+		std::list<int> datList = std::list<int>();
+		datList.push_back(-1);
+		datList.push_back(0);
+		datList.push_back(1);
+	        ((Navigator*)this->mode)->init(datList);
+	}
 	else if (msg->order == "no_line")
 		this->mode->unlaunch();
 }

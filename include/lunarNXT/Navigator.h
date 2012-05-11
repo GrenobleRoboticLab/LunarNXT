@@ -15,12 +15,18 @@ private:
 	nxt_msgs::Color colorMsg;
 	nxt_msgs::Color colorLine;
 	nxt_msgs::Color colorPastille;
+	bool online;
+
+	void startLineFollower();
+	void stopLineFollower();
 
 public:
 	Navigator();
 	Navigator(MoveMgr* mm, LineFollower* lfo);
 	void init(std::list<int> choices);
 	void updateColor(nxt_msgs::Color msg);
+	void setColorLine(nxt_msgs::Color color);
+        void setColorPastille(nxt_msgs::Color color);
 };
 
 #endif

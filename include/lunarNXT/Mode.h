@@ -14,12 +14,6 @@ private:
 	MoveMgr* mm;
 
 protected:
-	// Gestion des deplacements
-	// MoveMgr* mm;
-	// getters
-	bool isLaunched();
-	bool isInitialized();
-	
 	// setter
 	void setInitialized(bool init);
 	
@@ -31,9 +25,13 @@ public:
 	Mode(MoveMgr* mm);
 	MoveMgr* getMm();
 
-	// methodes de lancement et d'arrêt du mode
+	// methodes de lancement et d'arret du mode
 	void launch();
 	void unlaunch();
+
+	 // getters
+        bool isLaunched();
+        bool isInitialized();
 };
 
 #endif
