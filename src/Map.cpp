@@ -73,10 +73,13 @@ void Map::line_push_front() {
 int Map::getLeftWay() {
 	MapElement* current = this->map[this->currentLine][this->currentCol];
 	int ret = 2;
+	int i = this->orientation + 1;
 	
-	for (int i = this->orientation + 1; i < this->orientation + 4; i++)
-		if (current->ways[i%4] == 1) ret = -(i - this->orientation - 2);
-	
+	while (ret == 2 || i < this->orientation + 4) {
+        	if (current->ways[i%4] == 1) ret = -(i - this->orientation - 2);
+        	i++;
+    	}
+		
 	return ret;
 }
 
