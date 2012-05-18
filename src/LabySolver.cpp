@@ -19,5 +19,5 @@ void LabySolver::updateColor(nxt_msgs::Color msg) {
 }
 
 void LabySolver::treat () {
-	;
+	// this is me;
 }
