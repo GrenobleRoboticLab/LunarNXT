@@ -13,8 +13,8 @@ Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) {
         this->colorLine.g = 0;
         this->colorLine.b = 0;
         this->colorPastille.r = 1;
-        this->colorPastille.g = 1;
-        this->colorPastille.b = 1;
+        this->colorPastille.g = 0;
+        this->colorPastille.b = 0;
 }
 
 void Navigator::treat() { 
