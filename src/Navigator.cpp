@@ -19,15 +19,17 @@ Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) {
 
 void Navigator::treat() { 
 	if (Tools::compare_color(&colorMsg, &colorLine)) {
-		if (this->online)
+		if (this->lfo->isLaunched())
 			this->lfo->updateColor(this->colorMsg);
 		else
 			this->startLineFollower();
 	}
 	else if (Tools::compare_color(&colorMsg, &colorPastille)) {
-		this->stopLineFollower();
-		if (this->choices.size() > 0)
-			this->applyChoice();
+		if (this->lfo->isLaunched()) {
+			this->stopLineFollower();
+			if (this->choices.size() > 0)
+				this->applyChoice();
+		}
 	}
         else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched()) 
 		this->unlaunch();

@@ -10,9 +10,9 @@ public:
 	~Map();
 	
 	enum Cardinal {
-                NORD = 0,
+                NORTH = 0,
 		WEST = 1,
-                SUD = 2,
+                SOUTH = 2,
                 EAST = 3
         };
 
@@ -23,11 +23,11 @@ public:
 			weight = 0;
 			for (int i = 0; i < 4; i++) { ways[i] = -1; }
 			switch(c) {
-				case NORD:
-					ways[SUD] = 0;
+				case NORTH:
+					ways[SOUTH] = 0;
 					break;
-				case SUD:
-					ways[NORD] = 0;
+				case SOUTH:
+					ways[NORTH] = 0;
 					break;
 				case EAST:
 					ways[WEST] = 0;
@@ -37,7 +37,7 @@ public:
 					break;
 			}
         	}
-		int countO() { return (ways[NORD] + ways[WEST] + ways[SUD] + ways[EAST]); }
+		int countO() { return (ways[NORTH] + ways[WEST] + ways[SOUTH] + ways[EAST]); }
         };
 
 

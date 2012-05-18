@@ -8,13 +8,13 @@ Map::~Map() { ; }
 
 bool Map::appendElement() {
 	switch (this->orientation) {
-		case NORD:
+		case NORTH:
 			if (this->currentLine == 0)
 				this->line_push_front();
 			else 
 				this->currentLine--;
 			break;
-		case SUD:
+		case SOUTH:
 			this->currentLine++;
 			if (this->currentLine == this->map.size())
 				this->line_push_back();
@@ -101,13 +101,13 @@ std::list<int> Map::waysToLastNode() {
 		tempOrientation = (Cardinal)((tempOrientation - ret.back()) % 4);
 	
 		switch (tempOrientation) {
-			case NORD:
+			case NORTH:
 				tempLine--;
 				break;
 			case WEST:
 				tempCol--;
 				break;
-			case SUD:
+			case SOUTH:
 				tempLine++;
 				break;
 			case EAST:
