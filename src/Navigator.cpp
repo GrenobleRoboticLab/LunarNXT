@@ -14,27 +14,34 @@ Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) {
         this->colorLine.b = 0;
         this->colorPastille.r = 1;
         this->colorPastille.g = 0;
-        this->colorPastille.b = 0;
+        this->colorPastille.b = 1;
 }
 
 void Navigator::treat() { 
+	ROS_INFO("r = %f, g = %f, b = %f", this->colorMsg.r, this->colorMsg.g, this->colorMsg.b);
 	if (Tools::compare_color(&colorMsg, &colorLine)) {
+		ROS_INFO("Line");
 		if (this->lfo->isLaunched())
 			this->lfo->updateColor(this->colorMsg);
 		else
 			this->startLineFollower();
 	}
 	else if (Tools::compare_color(&colorMsg, &colorPastille)) {
+		ROS_INFO("Pastille");
 		if (this->lfo->isLaunched()) {
 			this->stopLineFollower();
 			if (this->choices.size() > 0)
 				this->applyChoice();
 		}
 	}
-        else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched()) 
+        else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched() && this->choices.size() == 0) {
+		ROS_INFO("STOP");
 		this->unlaunch();
-	else 
+	}
+	else if (!this->getMm()->hasGoalSet()) { 
+		ROS_INFO("uc");
 		this->lfo->updateColor(this->colorMsg);
+	}
 }
 
 void Navigator::init(std::list<int> choices) { 
@@ -64,11 +71,12 @@ void Navigator::stopLineFollower() {
 }
 
 void Navigator::applyChoice() {
+	ROS_INFO("choix restant %d", this->choices.size());
 	int choice = this->choices.front();
         this->choices.pop_front();
 
        	if (choice == 0)
         	this->getMm()->linearMove(0.72, 3);
 	else 
-		this->getMm()->turn(0.72, (choice * 1.6));
+		this->getMm()->turn(0.72, (choice * 7));
 }
