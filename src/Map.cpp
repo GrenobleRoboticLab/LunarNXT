@@ -95,7 +95,7 @@ std::list<int> Map::waysToLastNode() {
 	while (tempElement->countO() <= 0) {
 		for (int i = tempOrientation + 1; i < tempOrientation + 4; i++)
 			if (tempElement->ways[i%4] == 0)
-				ret.push_back(i - tempOrientation - 2);
+				ret.push_back(-(i - tempOrientation - 2));
 		
 		tempElement->ways[(tempOrientation + 2) % 4] = -1;
 		tempOrientation = (Cardinal)((tempOrientation - ret.back()) % 4);
