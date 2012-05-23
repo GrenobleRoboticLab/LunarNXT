@@ -25,6 +25,7 @@ public:
 	LineFollower();
 	LineFollower(MoveMgr* mm);
 	void updateColor(nxt_msgs::Color msg);
+	void setOrientation(Map::Cardinal orientation);
 };
 
 #endif

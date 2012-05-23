@@ -70,21 +70,21 @@ void Map::line_push_front() {
 
 }
 
-int Map::getLeftWay() {
+Map::Choice Map::getLeftWay() {
 	MapElement* current = this->map[this->currentLine][this->currentCol];
-	int ret = 2;
+	Choice ret = BACK;
 	int i = this->orientation + 1;
 	
-	while (ret == 2 || i < this->orientation + 4) {
-        	if (current->ways[i%4] == 1) ret = -(i - this->orientation - 2);
+	while (ret == BACK || i < this->orientation + 4) {
+        	if (current->ways[i%4] == 1) ret = (Choice)(-(i - this->orientation - 2));
         	i++;
     	}
 		
 	return ret;
 }
 
-std::list<int> Map::waysToLastNode() {
-	std::list<int> ret = std::list<int>();
+std::list<Map::Choice> Map::waysToLastNode() {
+	std::list<Choice> ret = std::list<Choice>();
 	
 	unsigned int tempLine = this->currentLine;
         unsigned int tempCol = this->currentCol;
@@ -95,7 +95,7 @@ std::list<int> Map::waysToLastNode() {
 	while (tempElement->countO() <= 0) {
 		for (int i = tempOrientation + 1; i < tempOrientation + 4; i++)
 			if (tempElement->ways[i%4] == 0)
-				ret.push_back(-(i - tempOrientation - 2));
+				ret.push_back((Choice)(-(i - tempOrientation - 2)));
 		
 		tempElement->ways[(tempOrientation + 2) % 4] = -1;
 		tempOrientation = (Cardinal)((tempOrientation - ret.back()) % 4);

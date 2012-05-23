@@ -3,6 +3,8 @@
 
 #include "lunarNXT/Receptor.h"
 
+#define BASE_EFFORT 0.72
+
 // Classe de gestion de déplacement
 class MoveMgr : public Receptor {
 private:

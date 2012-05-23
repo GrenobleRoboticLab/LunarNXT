@@ -9,6 +9,13 @@ public:
 	Map();
 	~Map();
 	
+	enum Choice {
+		RIGHT = -1,
+		AHEAD = 0,
+		LEFT = 1,
+		BACK = 2
+	};
+		
 	enum Cardinal {
                 NORTH = 0,
 		WEST = 1,
@@ -45,10 +52,10 @@ public:
 	bool appendElement(unsigned int line, unsigned int col);
 	
 	// retourne le chemin le plus a gauche (left = 1, ahead = 0, right = -1)
-	int getLeftWay();
+	Choice getLeftWay();
 	
 	// retourne une liste contennant les directions a prendre jusqu'au dernier noeud
-	std::list<int> waysToLastNode();
+	std::list<Choice> waysToLastNode();
 	
 	std::vector<std::vector<MapElement *> > getMap();
 	void setOrientation(Cardinal orientation);
