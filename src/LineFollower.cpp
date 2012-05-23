@@ -35,37 +35,15 @@ void LineFollower::treat() {
 	}
 	else {
 		if (this->online) {
-        		this->getMm()->turn(0.72, -((this->orientation-2)*0.5));
+        		this->getMm()->turn(0.72, ((this->orientation-2)*0.4));
+                        //this->orientation = (Map::Cardinal)((this->orientation+2)%4);
                 	this->online = false;
 		}
-                if(!this->getMm()->hasGoalSet()) {
-                	this->orientation = (Map::Cardinal)((this->orientation+2)%4);
-                        this->getMm()->turn(0.72, (this->orientation-2)*1);
+                else if(!this->getMm()->hasGoalSet()) {
+                        this->getMm()->turn(0.72, -(this->orientation-2)*0.8);
+			this->orientation = (Map::Cardinal)((this->orientation+2)%4);
 		}
 	}
-/*
-switch(this->orientation) {
-case Map::WEST:
-if (this->online) {
-         this->getMm()->turn(0.72, 0.5);
-                 this->online = false;
-                         }
-                         if(!this->getMm()->hasGoalSet()) {
-                        this->orientation = Map::EAST;
-                         this->getMm()->turn(0.72, -1);
-                         }
-break;
-case Map::EAST:
-                         if (this->online) {
-                        this->getMm()->turn(0.72, -0.5);
-                         this->online = false;
-                         }
-                        if(!this->getMm()->hasGoalSet()) {
-                         this->orientation = Map::WEST;
-                         this->getMm()->turn(0.72, 1);
-                         }
-break;
-default: break;
 }
-*/
-}
+
+void LineFollower::setOrientation(Map::Cardinal orientation) { this->orientation = orientation; }
