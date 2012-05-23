@@ -1,6 +1,9 @@
 #include "lunarNXT/Navigator.h"
 #include "lunarNXT/Tools.h"
 
+#define TURN_RATIO 0.4
+#define PASTILLE_SIZE 2
+
 Navigator::Navigator() : Mode() { ; }
 Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) { 
 	this->lfo = lfo;
@@ -30,7 +33,7 @@ void Navigator::treat() {
 	}
 }
 
-void Navigator::init(std::list<int> choices) { 
+void Navigator::init(std::list<Map::Choice> choices) { 
 	this->choices = choices; 
 	this->setInitialized(true);
 }
@@ -59,14 +62,20 @@ void Navigator::stopLineFollower() {
 void Navigator::applyChoice() {
 	if (this->choices.size() <= 0) this->unlaunch();
 	else {
-		int choice = this->choices.front();
+		Map::Choice choice = this->choices.front();
 	        this->choices.pop_front();
 	
-	       	if (choice == 0)
-	        	this->getMm()->linearMove(BASE_EFFORT, 2);
-		else { 
-			this->getMm()->turn(BASE_EFFORT, (choice * 0.41));
+		switch (choice) {
+	       	case Map::AHEAD:
+	        	this->getMm()->linearMove(BASE_EFFORT, PASTILLE_SIZE);
+			break;
+		case Map::BACK:
+			this->getMm()->turn(BASE_EFFORT, MPI);
+			break;
+		default:
+			this->getMm()->turn(BASE_EFFORT, (choice * TURN_RATIO));
 			this->lfo->setOrientation((Map::Cardinal)(choice + 2));
+			break;
 		}
 	}
 }

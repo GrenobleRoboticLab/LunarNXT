@@ -4,6 +4,7 @@
 #include "lunarNXT/Receptor.h"
 
 #define BASE_EFFORT 0.72
+#define MPI 3.14159265
 
 // Classe de gestion de déplacement
 class MoveMgr : public Receptor {

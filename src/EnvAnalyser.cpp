@@ -85,21 +85,21 @@ void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 		this->mm->turnRight(0.8);
 	else if (msg->order == "line") {
 		this->mode->launch();
-		std::list<int> choices = std::list<int>();
-		choices.push_back(0);
-                choices.push_back(0);
-                choices.push_back(0);
-                choices.push_back(1);
-                choices.push_back(-1);
-                choices.push_back(1);
-                choices.push_back(0);
-                choices.push_back(1);
-                choices.push_back(-1);
-                choices.push_back(1);
-                choices.push_back(0);
-                choices.push_back(0);
-                choices.push_back(0);
-                choices.push_back(1);
+		std::list<Map::Choice> choices = std::list<Map::Choice>();
+		choices.push_back(Map::AHEAD);
+                choices.push_back(Map::AHEAD);
+                choices.push_back(Map::AHEAD);
+                choices.push_back(Map::LEFT);
+                choices.push_back(Map::RIGHT);
+                choices.push_back(Map::LEFT);
+                choices.push_back(Map::AHEAD);
+                choices.push_back(Map::LEFT);
+                choices.push_back(Map::RIGHT);
+                choices.push_back(Map::LEFT);
+                choices.push_back(Map::AHEAD);
+                choices.push_back(Map::AHEAD);
+                choices.push_back(Map::AHEAD);
+                choices.push_back(Map::LEFT);
 		((Navigator*)this->mode)->init(choices);
 	}
 	else if (msg->order == "no_line")
