@@ -24,9 +24,8 @@ void Navigator::treat() {
 	if (Tools::compare_color(&colorMsg, &colorPastille))
 		this->applyChoice();
 	else {
-		ROS_INFO("not on pastille");
-		if (this->online) { 
-			this->lfo->updateColor(this->colorMsg);ROS_INFO("online");}
+		if (this->online)
+			this->lfo->updateColor(this->colorMsg);
 		else if (!this->getMm()->hasGoalSet()) 
 			this->startLineFollower();
 	}
@@ -59,19 +58,15 @@ void Navigator::stopLineFollower() {
 }
 
 void Navigator::applyChoice() {
-	ROS_INFO("CHOIX RESTANT = %d", this->choices.size());
-
 	if (checkDist(this->getMm()->getLeftPos(), this->getMm()->getRightPos())) {
-		
-		if (this->online) this->stopLineFollower();
-		ROS_INFO("APPLY");
-		if (this->choices.size() <= 0) this->unlaunch();
-
+		if (this->online)
+			this->stopLineFollower();
+		if (this->choices.size() <= 0)
+			this->unlaunch();
 		else {
-			this->getMm()->stop();
 			Map::Choice choice = this->choices.front();
 	        	this->choices.pop_front();
-	ROS_INFO("else");
+
 			switch (choice) {
 	       			case Map::AHEAD:
 	        			this->getMm()->linearMove(BASE_EFFORT, PASTILLE_SIZE);
@@ -81,11 +76,10 @@ void Navigator::applyChoice() {
 					break;
 				default:
 					this->getMm()->turnAround(BASE_EFFORT+0.05, (choice * TURN_RATIO));
-					ROS_INFO("TURN, %d", (choice * TURN_RATIO));
 					this->lfo->setOrientation((Map::Cardinal)(choice + 2));
 					break;
 			}
-	
+
 			this->leftPos = this->getMm()->getLeftPos();
 			this->rightPos = this->getMm()->getRightPos();
 		}
@@ -93,8 +87,10 @@ void Navigator::applyChoice() {
 }
 
 bool Navigator::checkDist(float a, float b) {
-	ROS_INFO("A = %f, B = %f", (a - this->leftPos), (b - this->rightPos));
-	if ((a - this->leftPos) > MPI || (b - this->rightPos) > MPI || (a - this->leftPos) < -MPI || (b - this->rightPos) < -MPI )
+	if ((a - this->leftPos) > MPI 
+	 || (b - this->rightPos) > MPI
+	 || (a - this->leftPos) < -MPI
+	 || (b - this->rightPos) < -MPI)
 		return true;
 	return false;
 }
