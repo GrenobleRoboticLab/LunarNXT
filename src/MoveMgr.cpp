@@ -52,6 +52,22 @@ void MoveMgr::turn(float effort, float rad) {
         else this->publish(effort, -effort);
 }
 
+void MoveMgr::turnAround(float effort, float rad) {
+        this->hasGoal = true;
+        if (rad >= 0) {
+		float distance_to_reach = rad * WHEEL_RADIUS;
+		this->desiredRightPosition = this->rightPosition + distance_to_reach;
+        	this->desiredLeftPosition = this->leftPosition+0.1;
+		this->publish(-0.5, effort);
+	}
+        else {
+		float distance_to_reach = -rad * WHEEL_RADIUS;
+        	this->desiredRightPosition = this->rightPosition+0.1;
+        	this->desiredLeftPosition = this->leftPosition + distance_to_reach;
+		this->publish(effort, -0.5);
+	}
+}
+
 // stope tout deplacement (fini et infini) en cours
 void MoveMgr::stop() {
         this->hasGoal = false;
@@ -103,11 +119,11 @@ void MoveMgr::checkGoal() {
                 bool right = false;
                 if (this->leftEffort == this->desiredLeftEffort)
                         left = checkLeftGoal();
-
                 if (this->rightEffort == this->desiredRightEffort)
                         right = checkRightGoal();
 
-                if (right || left)
+                //if (right || left)
+			ROS_INFO("desl = %f, desr = %f", this->desiredLeftEffort, this->desiredRightEffort);
                         this->publish(this->desiredLeftEffort, this->desiredRightEffort);
 
                 if (this->desiredLeftEffort == 0 && this->desiredRightEffort == 0)
@@ -117,7 +133,7 @@ void MoveMgr::checkGoal() {
 
 // verifie si le moteur gauche a atteint la position desiree
 bool MoveMgr::checkLeftGoal() {
-        if ((this->leftEffort > 0 && this->desiredLeftPosition <= this->leftPosition) ||
+        if ((this->leftEffort >= 0 && this->desiredLeftPosition <= this->leftPosition) ||
             (this->leftEffort < 0 && this->desiredLeftPosition >= this->leftPosition)) {
                 this->desiredLeftEffort = 0;
                 return true;
@@ -127,7 +143,7 @@ bool MoveMgr::checkLeftGoal() {
 
 // verifie si le moteur droit a atteint la position desiree
 bool MoveMgr::checkRightGoal() {
-        if ((this->rightEffort > 0 && this->desiredRightPosition <= this->rightPosition) ||
+        if ((this->rightEffort >= 0 && this->desiredRightPosition <= this->rightPosition) ||
             (this->rightEffort < 0 && this->desiredRightPosition >= this->rightPosition)) {
                 this->desiredRightEffort = 0;
                 return true;

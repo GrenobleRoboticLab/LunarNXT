@@ -3,7 +3,7 @@
 
 #include "lunarNXT/Receptor.h"
 
-#define BASE_EFFORT 0.72
+#define BASE_EFFORT 0.73
 #define MPI 3.14159265
 
 // Classe de gestion de déplacement
@@ -43,6 +43,8 @@ public:
         // deplacement finit ()avec une marge d'erreur)
         void linearMove(float effort, int cm);
         void turn(float effort, float rad);
+
+	void turnAround(float effort, float rad);
 
         // coupe les moteurs
         void stop();

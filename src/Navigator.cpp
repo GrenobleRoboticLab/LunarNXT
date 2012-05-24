@@ -1,7 +1,7 @@
 #include "lunarNXT/Navigator.h"
 #include "lunarNXT/Tools.h"
 
-#define TURN_RATIO 0.4
+#define TURN_RATIO 2 
 #define PASTILLE_SIZE 2
 
 Navigator::Navigator() : Mode() { ; }
@@ -21,14 +21,14 @@ Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) {
 }
 
 void Navigator::treat() {
-	if (Tools::compare_color(&colorMsg, &colorPastille)) {
-		//if (this->online)
-		//	this->stopLineFollower();
+	if (Tools::compare_color(&colorMsg, &colorPastille))
 		this->applyChoice();
-	}
 	else {
-		if (this->online) this->lfo->updateColor(this->colorMsg);
-		else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched()) { startLineFollower(); }
+		ROS_INFO("not on pastille");
+		if (this->online) { 
+			this->lfo->updateColor(this->colorMsg);ROS_INFO("online");}
+		else if (!this->getMm()->hasGoalSet()) 
+			this->startLineFollower();
 	}
 }
 
@@ -60,34 +60,41 @@ void Navigator::stopLineFollower() {
 
 void Navigator::applyChoice() {
 	ROS_INFO("CHOIX RESTANT = %d", this->choices.size());
-	if (this->choices.size() <= 0) this->unlaunch();
-	else if (checkDist(this->getMm()->getLeftPos(), this->getMm()->getRightPos())) {
+
+	if (checkDist(this->getMm()->getLeftPos(), this->getMm()->getRightPos())) {
+		
+		if (this->online) this->stopLineFollower();
 		ROS_INFO("APPLY");
-		Map::Choice choice = this->choices.front();
-	        this->choices.pop_front();
+		if (this->choices.size() <= 0) this->unlaunch();
+
+		else {
+			this->getMm()->stop();
+			Map::Choice choice = this->choices.front();
+	        	this->choices.pop_front();
+	ROS_INFO("else");
+			switch (choice) {
+	       			case Map::AHEAD:
+	        			this->getMm()->linearMove(BASE_EFFORT, PASTILLE_SIZE);
+					break;
+				case Map::BACK:
+					this->getMm()->turnAround(BASE_EFFORT, 3*MPI);
+					break;
+				default:
+					this->getMm()->turnAround(BASE_EFFORT+0.05, (choice * TURN_RATIO));
+					ROS_INFO("TURN, %d", (choice * TURN_RATIO));
+					this->lfo->setOrientation((Map::Cardinal)(choice + 2));
+					break;
+			}
 	
-		switch (choice) {
-	       	case Map::AHEAD:
-	        	this->getMm()->linearMove(BASE_EFFORT, PASTILLE_SIZE);
-			break;
-		case Map::BACK:
-			this->getMm()->turn(BASE_EFFORT, MPI);
-			break;
-		default:
-			this->getMm()->turn(BASE_EFFORT, (choice * TURN_RATIO));
-			this->lfo->setOrientation((Map::Cardinal)(choice + 2));
-			break;
+			this->leftPos = this->getMm()->getLeftPos();
+			this->rightPos = this->getMm()->getRightPos();
 		}
-		this->leftPos = this->getMm()->getLeftPos();
-		this->rightPos = this->getMm()->getRightPos();
 	}
-	else this->lfo->updateColor(this->colorMsg);
 }
 
 bool Navigator::checkDist(float a, float b) {
-ROS_INFO("A = %f, B = %f", (a - this->leftPos), (b - this->rightPos));
-
-	if ((a - this->leftPos) > 7 || (b - this->rightPos) > 3)
+	ROS_INFO("A = %f, B = %f", (a - this->leftPos), (b - this->rightPos));
+	if ((a - this->leftPos) > MPI || (b - this->rightPos) > MPI || (a - this->leftPos) < -MPI || (b - this->rightPos) < -MPI )
 		return true;
 	return false;
 }
