@@ -5,6 +5,8 @@
 #include "lunarNXT/EnvAnalyser.h"
 #include "nxt_msgs/JointCommand.h"
 
+using namespace lunar_lib;
+
 class LunarNXT {
 private:
 	ros::NodeHandle n;

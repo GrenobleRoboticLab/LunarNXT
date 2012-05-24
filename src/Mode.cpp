@@ -1,5 +1,7 @@
 #include "lunarNXT/Mode.h"
 
+using namespace lunar_lib;
+
 // Constructeur
 Mode::Mode() : Receptor() { ; }
 Mode::Mode(MoveMgr* mm) : Receptor(mm->getNameLeftMotor(), mm->getNameRightMotor()) { 

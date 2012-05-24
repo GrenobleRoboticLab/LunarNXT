@@ -4,6 +4,8 @@
 #define TURN_RATIO 2 
 #define PASTILLE_SIZE 2
 
+using namespace lunar_lib;
+
 Navigator::Navigator() : Mode() { ; }
 Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) { 
 	this->lfo = lfo;

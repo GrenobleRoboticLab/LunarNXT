@@ -1,5 +1,7 @@
 #include "lunarNXT/LabySolver.h"
 
+using namespace lunar_lib;
+
 // Constructeurs
 LabySolver::LabySolver() : Mode() { }
 

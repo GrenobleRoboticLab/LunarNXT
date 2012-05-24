@@ -1,5 +1,7 @@
 #include "lunarNXT/Map.h"
 
+using namespace lunar_lib;
+
 Map::Map() { 
 	this->orientation = EAST;
 	this->map = std::vector<std::vector<MapElement *> >();

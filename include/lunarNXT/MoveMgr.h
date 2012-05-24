@@ -26,6 +26,8 @@
 #define BASE_EFFORT 0.73
 #define MPI 3.14159265
 
+namespace lunar_lib {
+
 /**
  * MoveMgr est la classe permettant la gestion des déplacements du LunarNXT.
  * Elle hérite de la classe Receptor contenant les méthodes virtuelles permettant de recevoir les informations des capteurs.
@@ -37,7 +39,7 @@ private:
 
         /// "hasGoal" permet de déterminer si le robot est en train d'executer une action finie.
         bool hasGoal;
-	/// Les attributs "desired" permettent de définir et stocker les objectifs d'un mouvement fini.
+		/// Les attributs "desired" permettent de définir et stocker les objectifs d'un mouvement fini.
         float desiredLeftPosition, desiredRightPosition;
         float desiredLeftEffort, desiredRightEffort;
 
@@ -49,85 +51,87 @@ private:
         void publish(float leftEffort, float rightEffort);
         
         /**
-	 * Les méthodes "check" effectuent des tests sur la position et l'effort de chaque moteur.
-	 * Elles permettent de déterminer si un déplacement fini est terminé.
-	 */
+		 * Les méthodes "check" effectuent des tests sur la position et l'effort de chaque moteur.
+		 * Elles permettent de déterminer si un déplacement fini est terminé.
+		 */
         void checkGoal();
         bool checkLeftGoal();
         bool checkRightGoal();
 
 public:
         /**
-	 * Constructeur.
-	 */
+		 * Constructeur.
+		 */
         MoveMgr();
         /**
-	 * Constructeur.
-	 * @param pub Pointeur vers le Publisher communiquant avec le robot.
-	 * @param leftName String permettant d'identifier le moteur de gauche.
-	 * @param rightName String permettant d'identifier le moteur de droite.
-	 */
+		 * Constructeur.
+		 * @param pub Pointeur vers le Publisher communiquant avec le robot.
+		 * @param leftName String permettant d'identifier le moteur de gauche.
+		 * @param rightName String permettant d'identifier le moteur de droite.
+		 **/
         MoveMgr(ros::Publisher* pub, std::string leftName, std::string rightName);
         /**
-	 * Destructeur.
-	 */
+		 * Destructeur.
+		 */
 		~MoveMgr();
 
         /**
-	 * "linearMove" permet de définir un mouvement simple (avancer ou reculer) infini.
-	 * @param effort Float indiquant l'effort à transmettre aux moteurs.
-	 */
+		 * "linearMove" permet de définir un mouvement simple (avancer ou reculer) infini.
+		 * @param effort Float indiquant l'effort à transmettre aux moteurs.
+		 */
         void linearMove(float effort);
-	/**
-	 * "linearMove" permet de définir un mouvement simple (avancer ou reculer) fini.
-	 * @param effort Float indiquant l'effort à transmettre aux moteurs.
-	 * @param cm Int indiquant la distance (théoriquement en centimetre) à parcourir avant de finir le déplacement.
-	 */
+		/**
+		 * "linearMove" permet de définir un mouvement simple (avancer ou reculer) fini.
+		 * @param effort Float indiquant l'effort à transmettre aux moteurs.
+		 * @param cm Int indiquant la distance (théoriquement en centimetre) à parcourir avant de finir le déplacement.
+		 */
         void linearMove(float effort, int cm);
 
-	/**
-	 * Definit une rotation infinie vers la gauche autour du centre du robot.
-	 * @param effort Float indiquant l'effort à transmettre aux moteurs.
-	 */
+		/**
+		 * Definit une rotation infinie vers la gauche autour du centre du robot.
+		 * @param effort Float indiquant l'effort à transmettre aux moteurs.
+		 */
         void turnLeft(float effort);
-	/**
-	 * Definit une rotation infinie vers la droite autour du centre du robot.
-	 * @param effort Float indiquant l'effort à transmettre aux moteurs.
-	 */
+		/**
+		 * Definit une rotation infinie vers la droite autour du centre du robot.
+		 * @param effort Float indiquant l'effort à transmettre aux moteurs.
+		 */
         void turnRight(float effort);
-	/**
-	 * Definit une rotation finie autour du centre du robot.
-	 * @param effort Float indiquant l'effort à transmettre aux moteurs.
-	 * @param rad Float indiquant l'angle (théoriquement en radiant) de la rotation.
-	 */
+		/**
+		 * Definit une rotation finie autour du centre du robot.
+		 * @param effort Float indiquant l'effort à transmettre aux moteurs.
+		 * @param rad Float indiquant l'angle (théoriquement en radiant) de la rotation.
+		 */
         void turn(float effort, float rad);
-	/**
-	 * Definit une rotation finie autour d'une chenille (chenille gauche pour un angle >0) du robot.
-	 * @param effort Float indiquant l'effort à transmettre aux moteurs.
-	 * @param rad Float indiquant l'angle (théoriquement en radiant) de la rotation.
-	 */
-	void turnAround(float effort, float rad);
+		/**
+		 * Definit une rotation finie autour d'une chenille (chenille gauche pour un angle >0) du robot.
+		 * @param effort Float indiquant l'effort à transmettre aux moteurs.
+		 * @param rad Float indiquant l'angle (théoriquement en radiant) de la rotation.
+		 */
+		void turnAround(float effort, float rad);
 
         /**
-	 * Permet de stoper les moteurs.
-	 */
+		 * Permet de stoper les moteurs.
+		 */
         void stop();
 
         void updateMotors(sensor_msgs::JointState msg);
         void updateRange(nxt_msgs::Range msg);
         
-	/**
-	 * Retourne la dernière position connue du moteur de gauche.
-	 */
+		/**
+		 * Retourne la dernière position connue du moteur de gauche.
+		 */
         float getLeftPos();
-	/**
-	 * Retourne la dernière position connue du moteur de droite.
-	 */
+		/**
+		 * Retourne la dernière position connue du moteur de droite.
+		 */
         float getRightPos();
-	/**
-	 * Indique si le robot est en cours de déplacement fini.
-	 */
+		/**
+		 * Indique si le robot est en cours de déplacement fini.
+		 */
         bool hasGoalSet();
+};
+
 };
 
 #endif

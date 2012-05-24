@@ -3,6 +3,7 @@
 #include "lunarNXT/LineFollower.h"
 #include "lunarNXT/LabySolver.h"
 
+using namespace lunar_lib;
 // Constructeurs
 EnvAnalyser::EnvAnalyser() { ; }
 EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
@@ -74,15 +75,15 @@ void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
 // donne des ordres au mode ou au MoveMgr (controle manuel ou non)
 void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
 	if (msg->order == "go")
-		this->mm->linearMove(0.8);
+		this->mm->linearMove(BASE_EFFORT);
 	else if (msg->order == "back")
-                this->mm->linearMove(-0.8);
+                this->mm->linearMove(-BASE_EFFORT);
 	else if (msg->order == "stop")
                 this->mm->stop();
 	else if (msg->order == "turn_l")
-		this->mm->turnLeft(0.8);
+		this->mm->turnAround(BASE_EFFORT, 3);
 	else if (msg->order == "turn_r")
-		this->mm->turnRight(0.8);
+		this->mm->turnAround(BASE_EFFORT, -3);
 	else if (msg->order == "line") {
 		this->mode->launch();
 		std::list<Map::Choice> choices = std::list<Map::Choice>();

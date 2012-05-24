@@ -1,5 +1,7 @@
 #include "lunarNXT/Receptor.h"
 
+using namespace lunar_lib;
+
 // Constructeurs
 Receptor::Receptor() { ; }
 
