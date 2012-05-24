@@ -16,10 +16,15 @@ private:
 	nxt_msgs::Color colorLine;
 	nxt_msgs::Color colorPastille;
 	bool online;
+	
+	float leftPos;
+	float rightPos;
 
 	void startLineFollower();
 	void stopLineFollower();
 	void applyChoice();
+
+	bool checkDist(float a, float b);
 
 public:
 	Navigator();

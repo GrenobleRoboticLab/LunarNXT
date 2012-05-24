@@ -22,14 +22,13 @@ Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) {
 
 void Navigator::treat() {
 	if (Tools::compare_color(&colorMsg, &colorPastille)) {
-		if (this->online) {
-			this->stopLineFollower();
-			this->applyChoice();
-		}
+		//if (this->online)
+		//	this->stopLineFollower();
+		this->applyChoice();
 	}
-	else if (!this->getMm()->hasGoalSet()) {
+	else {
 		if (this->online) this->lfo->updateColor(this->colorMsg);
-		else startLineFollower();
+		else if (!this->getMm()->hasGoalSet() && !this->lfo->isLaunched()) { startLineFollower(); }
 	}
 }
 
@@ -60,8 +59,10 @@ void Navigator::stopLineFollower() {
 }
 
 void Navigator::applyChoice() {
+	ROS_INFO("CHOIX RESTANT = %d", this->choices.size());
 	if (this->choices.size() <= 0) this->unlaunch();
-	else {
+	else if (checkDist(this->getMm()->getLeftPos(), this->getMm()->getRightPos())) {
+		ROS_INFO("APPLY");
 		Map::Choice choice = this->choices.front();
 	        this->choices.pop_front();
 	
@@ -77,5 +78,16 @@ void Navigator::applyChoice() {
 			this->lfo->setOrientation((Map::Cardinal)(choice + 2));
 			break;
 		}
+		this->leftPos = this->getMm()->getLeftPos();
+		this->rightPos = this->getMm()->getRightPos();
 	}
+	else this->lfo->updateColor(this->colorMsg);
+}
+
+bool Navigator::checkDist(float a, float b) {
+ROS_INFO("A = %f, B = %f", (a - this->leftPos), (b - this->rightPos));
+
+	if ((a - this->leftPos) > 7 || (b - this->rightPos) > 3)
+		return true;
+	return false;
 }

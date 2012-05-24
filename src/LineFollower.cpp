@@ -20,7 +20,7 @@ void LineFollower::updateColor(nxt_msgs::Color msg) {
 		this->colorLine.r = colorMsg.r;
 		this->colorLine.g = colorMsg.g;
 		this->colorLine.b = colorMsg.b;
-
+		this->count = 0;
 		this->setInitialized(true);
 		this->online = true;
 	}
@@ -36,12 +36,17 @@ void LineFollower::treat() {
 	else {
 		if (this->online) {
         		this->getMm()->turn(BASE_EFFORT, ((this->orientation-2)*0.4));
-                        //this->orientation = (Map::Cardinal)((this->orientation+2)%4);
+                        this->count++;
                 	this->online = false;
 		}
                 else if(!this->getMm()->hasGoalSet()) {
                         this->getMm()->turn(BASE_EFFORT, -(this->orientation-2)*0.8);
+			this->count++;
 			this->orientation = (Map::Cardinal)((this->orientation+2)%4);
+		}
+		if (count > 2) {
+			this->getMm()->linearMove(BASE_EFFORT, 1);
+			this->count = 0;
 		}
 	}
 }

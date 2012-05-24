@@ -16,7 +16,7 @@ private:
 	nxt_msgs::Color colorLine;
 	bool online;
 	Map::Cardinal orientation;
-
+	int count;
 	// traitement du mode
 	void treat();	
 	
