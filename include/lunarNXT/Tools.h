@@ -22,9 +22,7 @@
 
 #include "nxt_msgs/Color.h"
 
-/**
- * Tools contient les methodes et classes utilisees dans de nombreuses classes.
- */
+/// Tools contient les methodes et classes utilisees dans de nombreuses classes.
 namespace Tools {
 	/**
 	 * Compare deux couleurs
@@ -32,6 +30,31 @@ namespace Tools {
 	 * @param c2 couleur a comparer
 	 */
 	bool compare_color(const nxt_msgs::Color* c1, const nxt_msgs::Color* c2);
+
+	/**
+	 * MVector represente un vecteur et par extension un point ou une taille
+	 */
+	class MVector {
+	private:
+		float x, y;
+	
+	public:
+		/**
+		 * Constructeur.
+		 */
+		MVector();
+		/**
+		 * Constructeur.
+		 */
+		MVector(float x, float y);
+	
+		float getX();
+		float getY();
+	
+		void setX(float x);
+		void setY(float y);
+		void setVector(float x, float y);
+	};
 };
 
 #endif
