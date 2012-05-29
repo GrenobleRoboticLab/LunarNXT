@@ -5,7 +5,7 @@
 #define MINRANGE 0.2
 #define WHEEL_RADIUS 7.5
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 // Constructeur
 MoveMgr::MoveMgr() { }

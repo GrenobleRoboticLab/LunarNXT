@@ -1,6 +1,6 @@
 #include "lunarNXT/Map.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 Map::Map() { 
 	this->orientation = EAST;

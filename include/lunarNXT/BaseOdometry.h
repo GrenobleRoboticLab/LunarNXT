@@ -31,7 +31,7 @@
 
 #define PUBLISH_TF true
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * @deprecated Classe inutilisee

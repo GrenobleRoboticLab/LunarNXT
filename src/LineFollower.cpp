@@ -1,7 +1,7 @@
 #include "lunarNXT/LineFollower.h"
 #include "lunarNXT/Tools.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 // Constructeurs
 LineFollower::LineFollower() : Mode() { }

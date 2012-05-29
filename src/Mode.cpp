@@ -1,6 +1,6 @@
 #include "lunarNXT/Mode.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 // Constructeur
 Mode::Mode() : Receptor() { ; }

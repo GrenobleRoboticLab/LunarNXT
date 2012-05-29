@@ -3,7 +3,7 @@
 #include "lunarNXT/LineFollower.h"
 #include "lunarNXT/LabySolver.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 // Constructeurs
 EnvAnalyser::EnvAnalyser() { ; }
 EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {

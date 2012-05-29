@@ -25,7 +25,7 @@
 
 #include "nxt_msgs/Color.h"
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * @remark: Work In Progress
@@ -34,8 +34,14 @@ class LineFinder : public Mode {
 private:
 	void treat();
 public:
-	// constructeurs et destructeur
+	/**
+	 * Constructeur.
+	 */
 	LineFinder();
+	/**
+	 * Constructeur.
+	 * @param: mm Pointeur vers le MoveMgr en charge de gerer les deplacements.
+	 */
 	LineFinder(MoveMgr* mm);
 
 };

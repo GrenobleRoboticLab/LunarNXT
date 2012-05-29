@@ -1,6 +1,6 @@
 #include "lunarNXT/Receptor.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 // Constructeurs
 Receptor::Receptor() { ; }

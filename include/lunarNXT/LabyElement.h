@@ -25,24 +25,54 @@
 #include "lunarNXT/Tools.h"
 #include "lunarNXT/Map.h"
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
+/**
+ * LabyElement represente un etat au sein d'un labyrinthe.
+ * Il est identifie et positionne par ses chemins (voisins direct)
+ */
 class LabyElement {
 private:
-        LabyElement* ways[4];
+    LabyElement* ways[4];
 	int visited;
 
 public:
-        LabyElement(LabyElement* prev);
-        LabyElement();
-        ~LabyElement();
+	/**
+	 * Constructeur.
+	 */
+	 LabyElement();
+	/**
+	 * Constructeur.
+	 * @param: prev LabyElement precedant celui en creation dans le parcour effectue par le robot.
+	 */
+	LabyElement(LabyElement* prev);
+	/**
+	 * Destructeur.
+	 */
+	~LabyElement();
 
+	/**
+	 * Permet de prendre la premiere direction de gauche encore inexploree.
+	 * @return: la direction à prendre par le robot
+	 */
 	Map::Choice getLeftChoice();
 
+	/**
+	 * Ajoute un LabyElement au tableau de chemin de l'objet.
+	 * @param index represente la direction du chemin : 1 => a gauche, 2 => en face, 3 => a droite.
+	 * @remark: la valeur 0 modifierait le LabyElement precedant dans l'arbre, sa modification peu entraîner fuite de memoire ou echec du mode en cours.
+	 */
 	void appendElement(int index);
+	
 	LabyElement* getElement(int index);
 
+	/**
+	 * Incremente le compteur de visite du noeud.
+	 */
 	void addVisit();
+	/**
+	 * @return: le nombre de passage sur le noeud.
+	 */
 	int getVisited();
 };
 

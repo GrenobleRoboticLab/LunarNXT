@@ -1,6 +1,6 @@
 #include "lunarNXT/LabyElement.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 LabyElement::LabyElement() { ; }
 

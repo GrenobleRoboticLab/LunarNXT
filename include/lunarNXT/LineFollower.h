@@ -27,7 +27,7 @@
 #include "nxt_msgs/Color.h"
 #include "nxt_msgs/Range.h"
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * LineFollower, heritant de Mode, est une classe representant un mode du robot.

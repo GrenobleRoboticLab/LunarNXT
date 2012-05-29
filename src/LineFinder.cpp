@@ -1,6 +1,6 @@
 #include "lunarNXT/LineFinder.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 LineFinder::LineFinder() : Mode() { ; }
 

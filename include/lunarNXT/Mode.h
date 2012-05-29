@@ -24,7 +24,7 @@
 
 #include "lunarNXT/MoveMgr.h"
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * Mode, herite de Receptor, représente un mode d'action pour le robot.

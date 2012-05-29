@@ -34,7 +34,7 @@
 #define NB_THREADS 5
 
 /// lunar_lib contient les classes utilisees pour le projet LunarNXT.
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * EnvAnalyser est la classe qui regroupe toute les interactions entre l'environnement, l'utilisateur et le robot.

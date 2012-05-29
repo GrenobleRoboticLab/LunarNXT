@@ -5,7 +5,7 @@
 #include "lunarNXT/EnvAnalyser.h"
 #include "nxt_msgs/JointCommand.h"
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 class LunarNXT {
 private:

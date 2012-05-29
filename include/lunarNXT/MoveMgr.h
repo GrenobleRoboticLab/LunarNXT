@@ -26,7 +26,7 @@
 #define BASE_EFFORT 0.73
 #define MPI 3.14159265
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * MoveMgr est la classe permettant la gestion des déplacements du LunarNXT.

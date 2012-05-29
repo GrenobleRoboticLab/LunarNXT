@@ -25,9 +25,10 @@
 #include "lunarNXT/Navigator.h"
 #include "lunarNXT/Map.h"
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
+ * LabySolver est un Mode permettant au robot de resoudre un labyrinthe.
  * @remark: Work In Progress
  */
 class LabySolver : public Mode {
@@ -45,11 +46,23 @@ private:
 	void treat();	
 	
 public:
-	// constructeurs et destructeur
+	/**
+	 * Constructeur.
+	 */
 	LabySolver();
+	/**
+	 * Constructeur.
+	 * @param: mm Pointeur vers le MoveMgr en charge de gerer les deplacements.
+	 */
 	LabySolver(MoveMgr* mm);
+	/**
+	 * Destructeur.
+	 */
 	~LabySolver();
 
+	/**
+	 * Methode virtuelle recevant les informations du capteur de couleur.
+	 */
 	void updateColor(nxt_msgs::Color msg);
 };
 

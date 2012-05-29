@@ -23,7 +23,7 @@
 #include <ros/ros.h>
 #include <stdio.h>
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
 * @remark: Work In Progress

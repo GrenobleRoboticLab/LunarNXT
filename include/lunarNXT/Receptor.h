@@ -26,7 +26,7 @@
 #include "nxt_msgs/Range.h"
 #include "nxt_msgs/Contact.h"
 
-namespace lunar_lib {
+namespace Lunar_lib {
 
 /**
  * Receptor est une classe abstraite declarant les methodes de reception d'information de la part des capteurs.

@@ -3,7 +3,7 @@
 #define RADIUS 0.022
 #define WHEELBASICS 7.5
 
-using namespace lunar_lib;
+using namespace Lunar_lib;
 
 BaseOdometry::BaseOdometry() {
 	this->leftPosition = std::vector<float>();
