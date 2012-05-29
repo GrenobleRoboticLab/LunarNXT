@@ -22,7 +22,7 @@ rosbuild_genmsg()
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-rosbuild_add_library(lunar_lib src/LineFollower.cpp src/MoveMgr.cpp src/EnvAnalyser.cpp src/Receptor.cpp src/Mode.cpp src/Map.cpp src/MapElement.cpp src/LabySolver.cpp src/LineFinder.cpp src/Navigator.cpp src/Tools.cpp)
+rosbuild_add_library(lunar_lib src/LineFollower.cpp src/MoveMgr.cpp src/EnvAnalyser.cpp src/Receptor.cpp src/Mode.cpp src/Map.cpp src/LabyElement.cpp src/LabySolver.cpp src/LineFinder.cpp src/Navigator.cpp src/Tools.cpp)
 rosbuild_add_executable(launcher src/lunarNXT_launcher.cpp)
 rosbuild_add_executable(commander src/lunarNXT_commander.cpp)
 

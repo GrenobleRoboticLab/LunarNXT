@@ -26,30 +26,31 @@
 namespace lunar_lib {
 
 /**
- * @remark: Work In Progress
- */
+* @remark: Work In Progress
+*/
 class Map {
 public:
 	Map();
 	~Map();
-	
+
 	enum Choice {
 		RIGHT = -1,
 		AHEAD = 0,
 		LEFT = 1,
 		BACK = 2
 	};
-		
+
 	enum Cardinal {
                 NORTH = 0,
 		WEST = 1,
                 SOUTH = 2,
                 EAST = 3
-        };
+	};
 
 	struct MapElement {
                 int ways[4];
 		int weight;
+
                 MapElement(Cardinal c) {
 			weight = 0;
 			for (int i = 0; i < 4; i++) { ways[i] = -1; }
@@ -67,11 +68,12 @@ public:
 					ways[EAST] = 0;
 					break;
 			}
-        	}
+		}
+
 		int countO() { return (ways[NORTH] + ways[WEST] + ways[SOUTH] + ways[EAST]); }
-        };
-
-
+	};
+	
+	
 	bool appendElement();
 	bool appendElement(unsigned int line, unsigned int col);
 	

@@ -33,6 +33,7 @@
 
 #define NB_THREADS 5
 
+/// lunar_lib contient les classes utilisees pour le projet LunarNXT.
 namespace lunar_lib {
 
 /**

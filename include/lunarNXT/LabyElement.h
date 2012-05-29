@@ -17,34 +17,33 @@
 //
 //=============================================================================
 
-#ifndef MAPELEMENT_H
-#define MAPELEMENT_H
+#ifndef LABYELEMENT_H
+#define LABYELEMENT_H
 
 #include <ros/ros.h>
 #include <stdio.h>
 #include "lunarNXT/Tools.h"
+#include "lunarNXT/Map.h"
 
 namespace lunar_lib {
 
-class MapElement {
+class LabyElement {
 private:
-	MapElement* prev;
-	Tools::MVector position;
-	int weight;
+        LabyElement* ways[4];
+	int visited;
 
 public:
-	MapElement();
-	MapElement(Tools::MVector position);
-	MapElement(Tools::MVector position, MapElement* prevMapElement);
-	~MapElement();
+        LabyElement(LabyElement* prev);
+        LabyElement();
+        ~LabyElement();
 
-	Tools::MVector getPosition();
-	MapElement* getPrevMapElement();
+	Map::Choice getLeftChoice();
 
-	float getX();
-	float getY();
+	void appendElement(int index);
+	LabyElement* getElement(int index);
 
-	void setPrevMapElement(MapElement* prevMapElement);
+	void addVisit();
+	int getVisited();
 };
 
 };
