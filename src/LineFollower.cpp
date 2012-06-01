@@ -19,9 +19,6 @@ void LineFollower::updateColor(nxt_msgs::Color msg) {
 		this->treat();
 	}
 	else if (this->isLaunched()) {
-		this->colorLine.r = colorMsg.r;
-		this->colorLine.g = colorMsg.g;
-		this->colorLine.b = colorMsg.b;
 		this->count = 0;
 		this->setInitialized(true);
 		this->online = true;
@@ -30,7 +27,7 @@ void LineFollower::updateColor(nxt_msgs::Color msg) {
 
 // Traitement du mode
 void LineFollower::treat() {
-	if(Tools::compare_color(&colorMsg, &colorLine)) {
+	if(Tools::is_line_color(this->colorMsg)) {
 		this->getMm()->stop();
 		this->online = true;
 		this->getMm()->linearMove(0.8);

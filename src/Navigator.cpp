@@ -10,20 +10,10 @@ Navigator::Navigator() : Mode() { ; }
 Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) { 
 	this->lfo = lfo;
 	this->online = false;
-
-//  /!\ test
-	this->colorLine = nxt_msgs::Color();
-	this->colorPastille = nxt_msgs::Color();
-	this->colorLine.r = 0;
-        this->colorLine.g = 0;
-        this->colorLine.b = 0;
-        this->colorPastille.r = 1;
-        this->colorPastille.g = 0;
-        this->colorPastille.b = 1;
 }
 
 void Navigator::treat() {
-	if (Tools::compare_color(&colorMsg, &colorPastille))
+	if (Tools::is_pastille_color(colorMsg))
 		this->applyChoice();
 	else {
 		if (this->online)
@@ -45,12 +35,9 @@ void Navigator::updateColor(nxt_msgs::Color msg) {
 	}
 }
 
-void Navigator::setColorLine(nxt_msgs::Color color) 	{ this->colorLine = color; }
-void Navigator::setColorPastille(nxt_msgs::Color color) { this->colorPastille = color; }
-
 void Navigator::startLineFollower() { 
 	this->lfo->launch();
-	this->lfo->updateColor(this->colorLine);
+	//this->lfo->updateColor(this->colorLine);
 	this->online = true;
 }
 

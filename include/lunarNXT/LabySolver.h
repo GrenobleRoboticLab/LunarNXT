@@ -23,7 +23,7 @@
 #include "lunarNXT/LineFollower.h"
 #include "lunarNXT/LineFinder.h"
 #include "lunarNXT/Navigator.h"
-#include "lunarNXT/Map.h"
+#include "lunarNXT/LabyElement.h"
 
 namespace Lunar_lib {
 
@@ -39,9 +39,10 @@ private:
 	LineFinder* lfi;
 	LineFollower* lfo;
 	Navigator* nav;
-
-	Map map;
+	LabyElement* currentElement;
 	
+	nxt_msgs::Color colorMsg;
+
 	// traitement du mode
 	void treat();	
 	

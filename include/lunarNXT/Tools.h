@@ -29,8 +29,10 @@ namespace Tools {
 	 * @param c1 couleur a comparer
 	 * @param c2 couleur a comparer
 	 */
-	bool compare_color(const nxt_msgs::Color* c1, const nxt_msgs::Color* c2);
-
+	bool compare_color(const nxt_msgs::Color &c1, const nxt_msgs::Color &c2);
+	bool is_line_color(const nxt_msgs::Color &c);
+	bool is_pastille_color(const nxt_msgs::Color &c);
+	bool is_ground_color(const nxt_msgs::Color &c);
 	/**
 	 * MVector represente un vecteur et par extension un point ou une taille
 	 */

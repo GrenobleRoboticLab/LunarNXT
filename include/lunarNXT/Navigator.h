@@ -38,8 +38,7 @@ private:
 	std::list<Map::Choice> choices;
 	
 	nxt_msgs::Color colorMsg;
-	nxt_msgs::Color colorLine;
-	nxt_msgs::Color colorPastille;
+
 	bool online;
 	
 	float leftPos;

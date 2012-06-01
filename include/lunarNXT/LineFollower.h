@@ -38,7 +38,7 @@ class LineFollower : public Mode {
 private:
 	// Attributs
 	nxt_msgs::Color colorMsg;
-	nxt_msgs::Color colorLine;
+
 	bool online;
 	Map::Cardinal orientation;
 	int count;
