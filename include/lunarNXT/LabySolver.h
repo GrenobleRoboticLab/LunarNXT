@@ -33,19 +33,31 @@ namespace Lunar_lib {
  */
 class LabySolver : public Mode {
 private:
-	// gestion des déplacements
-	MoveMgr* mm;
+	enum State {
+		INIT,
+		NAVIGATE,
+		LINEFINDER,
+		COMPUTE
+	};
 
 	LineFinder* lfi;
 	LineFollower* lfo;
 	Navigator* nav;
+	
+	Mode* currentMode;
 	LabyElement* currentElement;
 	
+	State state;
+
 	nxt_msgs::Color colorMsg;
 
 	// traitement du mode
-	void treat();	
+	void treat();
 	
+	void navLauncher(std::list<Map::Choice> choices);
+	void lfiLauncher();
+	void computeLauncher();
+
 public:
 	/**
 	 * Constructeur.

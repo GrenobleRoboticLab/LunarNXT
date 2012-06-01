@@ -37,7 +37,6 @@ void Navigator::updateColor(nxt_msgs::Color msg) {
 
 void Navigator::startLineFollower() { 
 	this->lfo->launch();
-	//this->lfo->updateColor(this->colorLine);
 	this->online = true;
 }
 

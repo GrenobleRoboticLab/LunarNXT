@@ -21,31 +21,33 @@
 #define LINEFINDER_H
 
 #include "lunarNXT/Mode.h"
-#include "lunarNXT/Map.h"
+#include "lunarNXT/LabyElement.h"
 
 #include "nxt_msgs/Color.h"
 
 namespace Lunar_lib {
 
-/**
- * @remark: Work In Progress
- */
 class LineFinder : public Mode {
 private:
+	// Attributs
+	LabyElement* element;
+	nxt_msgs::Color colorMsg;
+
+	int state;
+	bool lineNotFound;
+	float leftPosition, rightPosition;
+
+	// traitement du mode
 	void treat();
+	bool checkDist(int dist);
+	
 public:
-	/**
-	 * Constructeur.
-	 */
+	// constructeurs et destructeur
 	LineFinder();
-	/**
-	 * Constructeur.
-	 * @param: mm Pointeur vers le MoveMgr en charge de gerer les deplacements.
-	 */
 	LineFinder(MoveMgr* mm);
-
+	void updateColor(nxt_msgs::Color msg);
+	void init(LabyElement* element);
 };
-
 };
 
 #endif

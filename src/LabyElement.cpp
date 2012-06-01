@@ -14,14 +14,16 @@ LabyElement::~LabyElement() {
 	for (int i = 1; i < 4; i++) delete this->ways[i];
 }
 
-Map::Choice LabyElement::getLeftChoice() {
+Map::Choice LabyElement::getLeftChoice(LabyElement* current) {
 	int tempVisit = this->visited;
 	int ret = 3;
 	int i = 0;
 
 	while (ret == 3) {
-		if (this->ways[(this->visited+i) % 4] != NULL && this->ways[visited+i]->getVisited() == 0)
+		if (this->ways[(this->visited+i) % 4] != NULL && this->ways[(visited+i) % 4]->getVisited() == 0) {
 			ret -= (4-i);
+			current = ways[(this->visited+i) % 4];
+		}
 		else if (ways[(this->visited+i) % 4] == NULL) tempVisit++;
 		i++;
 	}
