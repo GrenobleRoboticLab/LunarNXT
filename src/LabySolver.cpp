@@ -57,12 +57,10 @@ void LabySolver::navLauncher(std::list<Map::Choice> choices) {
 }
 
 void LabySolver::lfiLauncher() {
-	/*
 	this->lfi->init(this->currentElement);
 	this->currentMode = this->lfi;
 	this->currentMode->launch();
 	this->state = LINEFINDER;
-	*/
 }
 
 void LabySolver::computeLauncher() {
