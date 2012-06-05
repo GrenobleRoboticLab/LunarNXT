@@ -36,8 +36,7 @@ private:
 	enum State {
 		INIT,
 		NAVIGATE,
-		LINEFINDER,
-		COMPUTE
+		LINEFINDER
 	};
 
 	LineFinder* lfi;
@@ -56,7 +55,7 @@ private:
 	
 	void navLauncher(std::list<Map::Choice> choices);
 	void lfiLauncher();
-	void computeLauncher();
+	void compute();
 
 public:
 	/**
