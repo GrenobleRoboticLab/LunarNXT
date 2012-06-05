@@ -55,7 +55,7 @@ public:
 	 * Permet de prendre la premiere direction de gauche encore inexploree.
 	 * @return: la direction à prendre par le robot
 	 */
-	Map::Choice getLeftChoice(LabyElement* current);
+	Map::Choice getLeftChoice(LabyElement *current);
 
 	/**
 	 * Ajoute un LabyElement au tableau de chemin de l'objet.

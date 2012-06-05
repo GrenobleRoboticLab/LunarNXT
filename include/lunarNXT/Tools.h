@@ -33,6 +33,7 @@ namespace Tools {
 	bool is_line_color(const nxt_msgs::Color &c);
 	bool is_pastille_color(const nxt_msgs::Color &c);
 	bool is_ground_color(const nxt_msgs::Color &c);
+	bool is_end_color(const nxt_msgs::Color &c);
 	/**
 	 * MVector represente un vecteur et par extension un point ou une taille
 	 */

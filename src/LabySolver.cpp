@@ -31,20 +31,23 @@ void LabySolver::updateColor(nxt_msgs::Color msg) {
 }
 
 void LabySolver::treat () {
-	this->currentMode->updateColor(this->colorMsg);
-	if (!this->currentMode->isLaunched()) {
-		switch(this->state) {
-			case INIT:
-				this->navLauncher(std::list<Map::Choice>());
-				break;
-			case NAVIGATE:
-				this->lfiLauncher();
-				break;
-			case LINEFINDER:
-				this->compute();
-				break;
+	if (Tools::is_end_color(this->colorMsg)) {
+		this->currentMode->updateColor(this->colorMsg);
+		if (!this->currentMode->isLaunched()) {
+			switch(this->state) {
+				case INIT:
+					this->navLauncher(std::list<Map::Choice>());
+					break;
+				case NAVIGATE:
+					this->lfiLauncher();
+					break;
+				case LINEFINDER:
+					this->compute();
+					break;
+			}
 		}
 	}
+	else  this->unlaunch();
 }
 
 void LabySolver::navLauncher(std::list<Map::Choice> choices) {
@@ -62,5 +65,7 @@ void LabySolver::lfiLauncher() {
 }
 
 void LabySolver::compute() {
-	;
+	std::list<Map::Choice> choice = std::list<Map::Choice>();
+	choice.push_back(this->currentElement->getLeftChoice(this->currentElement));
+	this->navLauncher(choice);
 }

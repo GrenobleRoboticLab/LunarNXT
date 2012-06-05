@@ -14,7 +14,7 @@ LabyElement::~LabyElement() {
 	for (int i = 1; i < 4; i++) delete this->ways[i];
 }
 
-Map::Choice LabyElement::getLeftChoice(LabyElement* current) {
+Map::Choice LabyElement::getLeftChoice(LabyElement *current) {
 	int tempVisit = this->visited;
 	int ret = 3;
 	int i = 0;

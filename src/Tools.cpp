@@ -7,18 +7,10 @@ bool Tools::compare_color(const nxt_msgs::Color &c1, const nxt_msgs::Color &c2) 
 }
 
 
-bool Tools::is_line_color(const nxt_msgs::Color &c) {
-	return (c.r == 0 && c.g == 0 && c.b == 0);
-}
-
-bool Tools::is_pastille_color(const nxt_msgs::Color &c) {
-	return (c.r == 1 && c.g == 0 && c.b == 1);
-}
-
-bool Tools::is_ground_color(const nxt_msgs::Color &c) {
-	return (c.r == 1 && c.g == 1 && c.b == 1);
-}
-
+bool Tools::is_line_color(const nxt_msgs::Color &c) 	{ return (c.r == 0 && c.g == 0 && c.b == 0); }
+bool Tools::is_pastille_color(const nxt_msgs::Color &c) { return (c.r == 1 && c.g == 0 && c.b == 1); }
+bool Tools::is_ground_color(const nxt_msgs::Color &c) 	{ return (c.r == 1 && c.g == 1 && c.b == 1); }
+bool Tools::is_end_color(const nxt_msgs::Color &c)   { return (c.r == 0 && c.g == 0 && c.b == 1); }
 
 MVector::MVector() : x(.0f), y(.0f) {}
 MVector::MVector(float x, float y) : x(x), y(y) {}
