@@ -41,9 +41,7 @@ void LabySolver::treat () {
 				this->lfiLauncher();
 				break;
 			case LINEFINDER:
-				this->computeLauncher();
-				break;
-			case COMPUTE:
+				this->compute();
 				break;
 		}
 	}
@@ -63,6 +61,6 @@ void LabySolver::lfiLauncher() {
 	this->state = LINEFINDER;
 }
 
-void LabySolver::computeLauncher() {
+void LabySolver::compute() {
 	;
 }
