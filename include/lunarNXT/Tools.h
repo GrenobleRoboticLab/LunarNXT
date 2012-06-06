@@ -30,9 +30,25 @@ namespace Tools {
 	 * @param c2 couleur a comparer
 	 */
 	bool compare_color(const nxt_msgs::Color &c1, const nxt_msgs::Color &c2);
+	/**
+	 * Indique si la couleur est celle d'une ligne
+	 * @param c : couleur a comparer
+	 */
 	bool is_line_color(const nxt_msgs::Color &c);
+	/**
+	 * Indique si la couleur est celle d'une ligne
+	 * @param c : couleur a comparer
+	 */
 	bool is_pastille_color(const nxt_msgs::Color &c);
+	/**
+	 * Indique si la couleur est celle d'une ligne
+	 * @param c : couleur a comparer
+	 */
 	bool is_ground_color(const nxt_msgs::Color &c);
+	/**
+	 * Indique si la couleur est celle d'une ligne
+	 * @param c : couleur a comparer
+	 */
 	bool is_end_color(const nxt_msgs::Color &c);
 	/**
 	 * MVector represente un vecteur et par extension un point ou une taille
@@ -48,14 +64,33 @@ namespace Tools {
 		MVector();
 		/**
 		 * Constructeur.
+		 * @param x : abscisse
+		 * @param y : ordonnée
 		 */
 		MVector(float x, float y);
-	
+
+		/**
+		 * @return l'abscisse du MVector
+		 */
 		float getX();
-		float getY();
+		/**
+		 * @return l'ordonnée du MVector
+		 */
+		 float getY();
 	
+		/**
+		 * Modifie l'abscisse
+		 */
 		void setX(float x);
+		/**
+		 * Modifie l'ordonné
+		 */
 		void setY(float y);
+		/**
+		 * Modifie l'abscisse et l'ordonnée
+		 * @param x
+		 * @param y
+		 */
 		void setVector(float x, float y);
 	};
 };
