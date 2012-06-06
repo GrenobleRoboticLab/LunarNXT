@@ -36,7 +36,6 @@ private:
 	int state;
 	bool lineNotFound;
 	float leftPosition, rightPosition;
-    int i;
 
 	// traitement du mode
 	void treat();
