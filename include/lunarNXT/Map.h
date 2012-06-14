@@ -26,13 +26,17 @@
 namespace Lunar_lib {
 
 /**
-* @remark: Work In Progress
-*/
+ * Classe représentant une carte, servant à localiser le robot
+ * @remark: Work In Progress
+ */
 class Map {
 public:
 	Map();
 	~Map();
 
+	/**
+	 * Choice représente un choix possible à un noeud de la carte
+	 */
 	enum Choice {
 		RIGHT = -1,
 		AHEAD = 0,
@@ -40,6 +44,9 @@ public:
 		BACK = 2
 	};
 
+	/**
+	 * Cardinal : points cardinaux
+	 */
 	enum Cardinal {
                 NORTH = 0,
 		WEST = 1,
@@ -47,6 +54,10 @@ public:
                 EAST = 3
 	};
 
+	/**
+	 * Structure représentant un élément de la carte
+	 * @deprecated
+	 */
 	struct MapElement {
                 int ways[4];
 		int weight;
@@ -77,13 +88,25 @@ public:
 	bool appendElement();
 	bool appendElement(unsigned int line, unsigned int col);
 	
-	// retourne le chemin le plus a gauche (left = 1, ahead = 0, right = -1)
+	/**
+	 * @return le chemin le plus a gauche (left = 1, ahead = 0, right = -1)
+	 */
 	Choice getLeftWay();
 	
-	// retourne une liste contennant les directions a prendre jusqu'au dernier noeud
+	/**
+	 * @return une liste contennant les directions a prendre jusqu'au dernier noeud
+	 */
 	std::list<Choice> waysToLastNode();
 	
+	/**
+	 * @return la carte dans son ensemble
+	 */
 	std::vector<std::vector<MapElement *> > getMap();
+	
+	/**
+	 * Change l'orientation du robot
+	 * @param orientation : la nouvelle orientation du robot
+	 */
 	void setOrientation(Cardinal orientation);
 
 private:

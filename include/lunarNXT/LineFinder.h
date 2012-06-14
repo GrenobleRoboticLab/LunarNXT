@@ -39,15 +39,33 @@ private:
 
 	// traitement du mode
 	void treat();
+    // test la distance
 	bool checkDist(int dist);
 	
 public:
-	// constructeurs et destructeur
+	/**
+     * Constructeur.
+     */
 	LineFinder();
+    /**
+     * Constructeur.
+     * @param mm Pointeur vers le MoveMgr en charge de gerer les deplacements.
+     */
 	LineFinder(MoveMgr* mm);
-	void updateColor(nxt_msgs::Color msg);
-	void init(LabyElement* element);
+	
+    
+    /**
+     * Methode virtuelle recevant les informations du capteur de couleur.
+     */
+    void updateColor(nxt_msgs::Color msg);
+	
+    /**
+     * Initialise le mode.
+     * @param element : pointeur sur l'élément courrant du labyrinthe
+     */
+    void init(LabyElement* element);
 };
+
 };
 
 #endif
