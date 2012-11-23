@@ -1,28 +1,27 @@
-#include "lunarNXT/Receptor.h"
+#include "LunarNXT/Receptor.h"
 
 using namespace Lunar_lib;
 
-// Constructeurs
 Receptor::Receptor() { ; }
 
-Receptor::Receptor(std::string nameLeftMotor, std::string nameRightMotor) {
-        this->nameLeftMotor = nameLeftMotor;
-	this->nameRightMotor = nameRightMotor;
+Receptor::Receptor(const std::string & sLMotorName, const std::string & sRMotorName) {
+	m_sLMotorName	= sLMotorName;
+	m_sRMotorName	= sRMotorName;
 }
 
-// Getters
-std::string Receptor::getNameLeftMotor() { return this->nameLeftMotor; }
-std::string Receptor::getNameRightMotor() { return this->nameRightMotor; }
+const std::string& Receptor::GetNameLeftMotor()	{ return m_sLMotorName; }
+const std::string& Receptor::GetNameRightMotor()	{ return m_sRMotorName; }
 
-// Touch sensor updaters
-void Receptor::updateRightTouch(nxt_msgs::Contact msg) { ; }
-void Receptor::updateLeftTouch(nxt_msgs::Contact msg) { ; }
+void Receptor::UpdateRightTouch(nxt_msgs::Contact msg)		{ ; }
+void Receptor::UpdateLeftTouch(nxt_msgs::Contact msg)		{ ; }
+void Receptor::UpdateRange(nxt_msgs::Range msg)				{ ; }
+void Receptor::UpdateColor(nxt_msgs::Color msg)				{ ; }
+void Receptor::UpdateMotors(sensor_msgs::JointState msg)	{ ; }
 
-// Range sensor updater
-void Receptor::updateRange(nxt_msgs::Range msg) { ; }
+void Receptor::SetMotorsName(const std::string & sLMotorName, const std::string & sRMotorName) {
+	SetLMotorName(sLMotorName);
+	SetRMotorName(sRMotorName);
+}
 
-// Color sensor updater
-void Receptor::updateColor(nxt_msgs::Color msg) { ; }
-
-// Motors updater
-void Receptor::updateMotors(sensor_msgs::JointState msg) { ; }
+void Receptor::SetLMotorName(const std::string & sLMotorName) { m_sLMotorName = sLMotorName; }
+void Receptor::SetRMotorName(const std::string & sRMotorName) { m_sRMotorName = sRMotorName; }

@@ -1,35 +1,49 @@
-#include "lunarNXT/Mode.h"
+#include "LunarNXT/Mode.h"
 
 using namespace Lunar_lib;
 
 // Constructeur
-Mode::Mode() : Receptor() { ; }
-Mode::Mode(MoveMgr* mm) : Receptor(mm->getNameLeftMotor(), mm->getNameRightMotor()) { 
-	this->mm = mm; 
-	this->launched = false;
-	this->initialized = false;
+Mode::Mode() : Receptor() { 
+	m_bLaunched		= false;
+	m_bInitialized	= false;
 }
 
-// Getters
-bool Mode::isLaunched()    { return this->launched; }
-bool Mode::isInitialized() { return this->initialized; }
+bool Mode::SetMoveManager(MoveMgr** ppMoveManager) {
+	bool bRet = false;
 
-// Setter
-void Mode::setInitialized(bool init) { this->initialized = init; }
+	if (ppMoveManager && *ppMoveManager) {
+		m_ppMoveManager = ppMoveManager;
+		SetMotorsName(((MoveMgr*)*m_ppMoveManager)->GetNameLeftMotor(), ((MoveMgr*)*m_ppMoveManager)->GetNameRightMotor());
+		bRet = true;
+	}
 
-// Methode de lancement du mode
-void Mode::launch() {
-        this->launched = true;
-        this->initialized = false;
+	return bRet;
 }
 
-
-// Methode d'arret du mode
-// Donne l'ordre MoveMgr de stopper les moteurs
-void Mode::unlaunch() {
-        this->launched = false;
-        this->initialized = false;
-	this->mm->stop();
+void Mode::Launch() {
+	m_bLaunched		= true;
+	m_bInitialized	= false;
 }
 
-MoveMgr* Mode::getMm() { return this->mm; }
+void Mode::Unlaunch() {
+	m_bLaunched		= false;
+	m_bInitialized	= false;
+	if (CheckMoveManager())
+		((MoveMgr*)*m_ppMoveManager)->Stop();
+}
+
+bool Mode::IsLaunched()    { return m_bLaunched;	}
+bool Mode::IsInitialized() { return m_bInitialized;	}
+
+void Mode::SetInitialized(bool init) { m_bInitialized = init; }
+
+bool Mode::CheckMoveManager() {
+	bool bRet = true;
+
+	if (!m_ppMoveManager || !*m_ppMoveManager) {
+		ROS_ERROR("MoveManager is NULL.");
+		bRet = false;
+	}
+
+	return bRet;
+}

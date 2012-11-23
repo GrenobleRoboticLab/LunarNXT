@@ -1,71 +1,74 @@
-#include "lunarNXT/LabySolver.h"
-#include "lunarNXT/Tools.h"
+#include "LunarNXT/LabySolver.h"
+#include "LunarNXT/Tools.h"
 
 using namespace Lunar_lib;
 
 // Constructeurs
 LabySolver::LabySolver() : Mode() { }
 
-LabySolver::LabySolver(MoveMgr* mm) : Mode(mm) {
-	this->lfo = new LineFollower(mm);
-	this->lfi = new LineFinder(mm);
-	this->nav = new Navigator(mm, this->lfo);
-	this->currentElement = new LabyElement();
-}
-
 LabySolver::~LabySolver() { 
-	delete this->lfi;
-	delete this->lfo;
-	delete this->nav;
-	delete this->currentElement;
+	delete m_pCurrentElement;
 }
 
-void LabySolver::updateColor(nxt_msgs::Color msg) {
-	this->colorMsg = msg;
-	if (this->isLaunched() && this->isInitialized())
-		this->treat();
-	else if (this->isLaunched()) {
-		this->currentMode = NULL;
-		this->state = INIT;
+bool LabySolver::SetMoveManager(MoveMgr** ppMoveManager) {
+    bool bRet = Mode::SetMoveManager(ppMoveManager);
+    
+    if (
+        m_LineFinder.SetMoveManager(ppMoveManager)      &&
+        m_Navigator.SetMoveManager(ppMoveManager)
+        )
+        bRet = true;
+        
+    return bRet;
+}
+
+void LabySolver::UpdateColor(nxt_msgs::Color msg) {
+	m_ColorMsg = msg;
+	if (IsLaunched() && IsInitialized())
+		Treat();
+	else if (IsLaunched()) {
+		m_pCurrentMode = NULL;
+		m_State = INIT;
 	}
 }
 
-void LabySolver::treat () {
-	if (Tools::is_end_color(this->colorMsg)) {
-		this->currentMode->updateColor(this->colorMsg);
-		if (!this->currentMode->isLaunched()) {
-			switch(this->state) {
+void LabySolver::Treat () {
+	if (Tools::is_end_color(m_ColorMsg)) {
+		m_pCurrentMode->UpdateColor(m_ColorMsg);
+		if (!m_pCurrentMode->IsLaunched()) {
+			switch(m_State) {
 				case INIT:
-					this->navLauncher(std::list<Map::Choice>());
+					NavLauncher(std::list<Map::Choice>());
 					break;
 				case NAVIGATE:
-					this->lfiLauncher();
+					LineFinderLauncher();
 					break;
 				case LINEFINDER:
-					this->compute();
+					Compute();
 					break;
 			}
 		}
 	}
-	else  this->unlaunch();
+	else
+	    Unlaunch();
 }
 
-void LabySolver::navLauncher(std::list<Map::Choice> choices) {
-	this->nav->init(choices);
-	this->currentMode = this->nav;
-	this->currentMode->launch();
-	this->state = NAVIGATE;
+void LabySolver::NavLauncher(std::list<Map::Choice> choices) {
+	m_Navigator.Init(choices);
+	m_pCurrentMode = &m_Navigator;
+	m_pCurrentMode->Launch();
+	m_State = NAVIGATE;
 }
 
-void LabySolver::lfiLauncher() {
-	this->lfi->init(this->currentElement);
-	this->currentMode = this->lfi;
-	this->currentMode->launch();
-	this->state = LINEFINDER;
+void LabySolver::LineFinderLauncher() {
+	m_LineFinder.Init(m_pCurrentElement);
+	m_pCurrentMode = &m_LineFinder;
+	m_pCurrentMode->Launch();
+	m_State = LINEFINDER;
 }
 
-void LabySolver::compute() {
+void LabySolver::Compute() {
 	std::list<Map::Choice> choice = std::list<Map::Choice>();
-	choice.push_back(this->currentElement->getLeftChoice(this->currentElement));
-	this->navLauncher(choice);
+	choice.push_back(m_pCurrentElement->GetLeftChoice(&m_pCurrentElement));
+	NavLauncher(choice);
 }

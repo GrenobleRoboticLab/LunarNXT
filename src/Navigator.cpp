@@ -1,84 +1,96 @@
-#include "lunarNXT/Navigator.h"
-#include "lunarNXT/Tools.h"
+#include "LunarNXT/Navigator.h"
+#include "LunarNXT/Tools.h"
 
 #define TURN_RATIO 2 
 #define PASTILLE_SIZE 2
 
 using namespace Lunar_lib;
 
-Navigator::Navigator() : Mode() { ; }
-Navigator::Navigator(MoveMgr* mm, LineFollower* lfo) : Mode(mm) { 
-	this->lfo = lfo;
-	this->online = false;
+Navigator::Navigator() : Mode() { 
+	m_bOnline = false;
 }
 
-void Navigator::treat() {
-	if (Tools::is_pastille_color(colorMsg))
-		this->applyChoice();
+bool Navigator::SetMoveManager(MoveMgr** ppMoveManager) {
+	bool bRet = false;
+
+	bRet = Mode::SetMoveManager(ppMoveManager);
+
+	if (bRet)
+		bRet = m_LineFollower.SetMoveManager(ppMoveManager);
+
+	return bRet;
+}
+
+void Navigator::Treat() {
+	if (Tools::is_pastille_color(m_ColorMsg))
+		ApplyChoice();
 	else {
-		if (this->online)
-			this->lfo->updateColor(this->colorMsg);
-		else if (!this->getMm()->hasGoalSet()) 
-			this->startLineFollower();
+		if (m_bOnline)
+			m_LineFollower.UpdateColor(m_ColorMsg);
+		else if (!((MoveMgr*)*m_ppMoveManager)->HasGoalSet()) 
+			StartLineFollower();
 	}
 }
 
-void Navigator::init(std::list<Map::Choice> choices) { 
-	this->choices = choices; 
-	this->setInitialized(true);
+void Navigator::Init(std::list<Map::Choice> choices) { 
+	m_lChoices = choices; 
+	SetInitialized(true);
 }
 
-void Navigator::updateColor(nxt_msgs::Color msg) { 
-	if (this->isLaunched() && this->isInitialized()) {
-		this->colorMsg = msg;
-		this->treat();
+void Navigator::UpdateColor(nxt_msgs::Color msg) { 
+	if (IsLaunched() && IsInitialized()) {
+		m_ColorMsg = msg;
+		Treat();
 	}
 }
 
-void Navigator::startLineFollower() { 
-	this->lfo->launch();
-	this->online = true;
+void Navigator::StartLineFollower() { 
+	m_LineFollower.Launch();
+	m_bOnline = true;
 }
 
-void Navigator::stopLineFollower() {
-	this->lfo->unlaunch();
-	this->online = false;
+void Navigator::StopLineFollower() {
+	m_LineFollower.Unlaunch();
+	m_bOnline = false;
 }
 
-void Navigator::applyChoice() {
-	if (checkDist(this->getMm()->getLeftPos(), this->getMm()->getRightPos())) {
-		if (this->online)
-			this->stopLineFollower();
-		if (this->choices.size() <= 0)
-			this->unlaunch();
+void Navigator::ApplyChoice() {
+	if (CheckDist(((MoveMgr*)*m_ppMoveManager)->GetLeftPos(), ((MoveMgr*)*m_ppMoveManager)->GetRightPos())) {
+		if (m_bOnline)
+			StopLineFollower();
+		if (m_lChoices.size() <= 0)
+			Unlaunch();
 		else {
-			Map::Choice choice = this->choices.front();
-	        	this->choices.pop_front();
+			Map::Choice choice = m_lChoices.front();
+	        	m_lChoices.pop_front();
 
 			switch (choice) {
 	       			case Map::AHEAD:
-	        			this->getMm()->linearMove(BASE_EFFORT, PASTILLE_SIZE);
+	        			((MoveMgr*)*m_ppMoveManager)->LinearMove(BASE_EFFORT, PASTILLE_SIZE);
 					break;
 				case Map::BACK:
-					this->getMm()->turnAround(BASE_EFFORT, 3*MPI);
+					((MoveMgr*)*m_ppMoveManager)->TurnAround(BASE_EFFORT, 3*MPI);
 					break;
 				default:
-					this->getMm()->turnAround(BASE_EFFORT+0.05, (choice * TURN_RATIO));
-					this->lfo->setOrientation((Map::Cardinal)(choice + 2));
+					((MoveMgr*)*m_ppMoveManager)->TurnAround(BASE_EFFORT+0.05, (choice * TURN_RATIO));
+					m_LineFollower.SetOrientation((Map::Cardinal)(choice + 2));
 					break;
 			}
 
-			this->leftPos = this->getMm()->getLeftPos();
-			this->rightPos = this->getMm()->getRightPos();
+			m_fLPos = ((MoveMgr*)*m_ppMoveManager)->GetLeftPos();
+			m_fRPos = ((MoveMgr*)*m_ppMoveManager)->GetRightPos();
 		}
 	}
 }
 
-bool Navigator::checkDist(float a, float b) {
-	if ((a - this->leftPos) > MPI 
-	 || (b - this->rightPos) > MPI
-	 || (a - this->leftPos) < -MPI
-	 || (b - this->rightPos) < -MPI)
-		return true;
-	return false;
+bool Navigator::CheckDist(float a, float b) {
+	bool bRet = false;
+
+	if ((a - m_fLPos) > MPI 
+	 || (b - m_fRPos) > MPI
+	 || (a - m_fLPos) < -MPI
+	 || (b - m_fRPos) < -MPI)
+		bRet = true;
+	
+	return bRet;
 }

@@ -1,5 +1,5 @@
 #include <math.h>
-#include "lunarNXT/MoveMgr.h"
+#include "LunarNXT/MoveMgr.h"
 #include "nxt_msgs/JointCommand.h"
 
 #define MINRANGE 0.2
@@ -7,151 +7,208 @@
 
 using namespace Lunar_lib;
 
-// Constructeur
-MoveMgr::MoveMgr() { }
-
-MoveMgr::MoveMgr(ros::Publisher* pub, std::string leftName, std::string rightName) : Receptor(leftName, rightName) {
-	this->publisher = pub;//n.advertise<nxt_msgs::JointCommand>("joint_command", 5);;
-        this->hasGoal = false;
+MoveMgr::MoveMgr() {
+	m_pPublisher	= NULL;
+	m_bHasGoal	= false;
 }
 
-// Destructeur
+MoveMgr::MoveMgr(const std::string & sLMotorName, const std::string & sRMotorName)
+	: Receptor(sLMotorName, sRMotorName)
+{
+	m_pPublisher	= NULL;
+	m_bHasGoal		= false;
+}
+
 MoveMgr::~MoveMgr() { ; }
 
-// Mouvement lineaire infini ver l'avant ou l'arriere
-void MoveMgr::linearMove(float effort) {
-        this->publish(effort, effort);
+bool MoveMgr::Init(ros::Publisher* pPublisher) {
+	bool bRet = false;
+
+	if (pPublisher)
+        {
+	    m_pPublisher = pPublisher;
+            bRet = true;
+        }
+
+	return bRet;
 }
 
-// Rotation infinie vers la gauche
-void MoveMgr::turnLeft(float effort) {
-        this->publish(-effort, effort);
+void MoveMgr::LinearMove(float fEffort) {
+	Publish(fEffort, fEffort);
 }
 
-// Rotation infinie vers la droite
-void MoveMgr::turnRight(float effort) {
-        this->publish(effort, -effort);
+void MoveMgr::LinearMove(float fEffort, float fCm) {
+	m_bHasGoal				= true;
+
+	m_fDesiredLeftPosition	= m_fLeftPosition + (fCm / 2);
+	m_fDesiredRightPosition = m_fRightPosition + (fCm / 2);
+        
+	if (fCm >= 0.0f)
+		Publish(fEffort, fEffort);
+	else 
+		Publish(-fEffort, -fEffort);
 }
 
-// Mouvement lineaire ver l'avant ou l'arriere
-void MoveMgr::linearMove(float effort, int cm) {
-        this->hasGoal = true;
-        this->desiredLeftPosition = this->leftPosition + (cm/2);
-        this->desiredRightPosition = this->rightPosition + (cm/2);
-        if (cm >= 0) this->publish(effort, effort);
-        else this->publish(-effort, -effort);
+void MoveMgr::TurnLeft(float fEffort) {
+	Publish(-fEffort, fEffort);
 }
 
-
-// Rotation finie vers la droite ou la gauche
-void MoveMgr::turn(float effort, float rad) {
-        this->hasGoal = true;
-        float distance_to_reach = rad * (WHEEL_RADIUS/2);
-        this->desiredRightPosition = this->rightPosition + distance_to_reach;
-        this->desiredLeftPosition = this->leftPosition - distance_to_reach;
-
-        if (rad >= 0) this->publish(-effort, effort);
-        else this->publish(effort, -effort);
+void MoveMgr::TurnRight(float fEffort) {
+	Publish(fEffort, -fEffort);
 }
 
-void MoveMgr::turnAround(float effort, float rad) {
-        this->hasGoal = true;
-	float distance_to_reach = std::fabs(rad * WHEEL_RADIUS);
-        if (rad >= 0) {
-		this->desiredRightPosition = this->rightPosition + distance_to_reach;
-        	this->desiredLeftPosition = this->leftPosition+0.1;
-		this->publish(-0.5, effort);
+void MoveMgr::Turn(float fEffort, float rad) {
+	float fDistance_to_reach	= rad * (WHEEL_RADIUS/2);
+	m_bHasGoal					= true;
+
+	m_fDesiredLeftPosition		= m_fLeftPosition - fDistance_to_reach;
+	m_fDesiredRightPosition		= m_fRightPosition + fDistance_to_reach;
+
+	if (rad >= 0)
+		Publish(-fEffort, fEffort);
+	else 
+		Publish(fEffort, -fEffort);
+}
+
+void MoveMgr::TurnAroundLeft(float fEffort) {
+	Publish(-0.5f, fEffort);
+}
+
+void MoveMgr::TurnAroundRight(float fEffort) {
+	Publish(-0.5f, -fEffort);
+}
+
+void MoveMgr::TurnAround(float fEffort, float fRad) {
+	float fDistance_to_reach	= std::fabs(fRad * WHEEL_RADIUS);
+	m_bHasGoal					= true;
+	
+	if (fRad >= 0) {
+		m_fDesiredLeftPosition		= m_fLeftPosition+0.1;
+		m_fDesiredRightPosition		= m_fRightPosition + fDistance_to_reach;
+		Publish(-0.5f, fEffort);
 	}
-        else {
-        	this->desiredRightPosition = this->rightPosition+0.1;
-        	this->desiredLeftPosition = this->leftPosition + distance_to_reach;
-		this->publish(effort, -0.5);
+	else {
+		m_fDesiredLeftPosition		= m_fLeftPosition+0.1;
+		m_fDesiredRightPosition		= m_fRightPosition + fDistance_to_reach;
+		Publish(fEffort, -0.5f);
 	}
 }
 
-// stope tout deplacement (fini et infini) en cours
-void MoveMgr::stop() {
-        this->hasGoal = false;
-        this->publish(0, 0);
+void MoveMgr::Stop() {
+        m_bHasGoal = false;
+        Publish(0.0f, 0.0f);
 }
 
-// Mise a jour de la position et de l'effort actuelle des Moteurs
-void MoveMgr::updateMotors(sensor_msgs::JointState msg) {
-	if (this->getNameLeftMotor() == msg.name.back()) {
-        	this->leftPosition = msg.position.back();
-        	this->leftEffort = msg.effort.back();
+void MoveMgr::UpdateMotors(sensor_msgs::JointState msg) {
+	if (GetNameLeftMotor() == msg.name.back()) {
+		m_fLeftPosition	= msg.position.back();
+		m_fLeftEffort	= msg.effort.back();
 	}
-	else if (this->getNameRightMotor() == msg.name.back()) {
-		this->rightPosition = msg.position.back();
-		this->rightEffort = msg.effort.back();
+	else if (GetNameRightMotor() == msg.name.back()) {
+		m_fRightPosition	= msg.position.back();
+		m_fRightEffort		= msg.effort.back();
 	}
-	this->checkGoal();
+
+	CheckGoal();
 }
 
-// Mise a jour du capteur a ultrason
-// stope les moteurs en cas de proximite
-void MoveMgr::updateRange(nxt_msgs::Range msg) {
-        if (msg.range < MINRANGE) this->stop();
+void MoveMgr::UpdateRange(nxt_msgs::Range msg) {
+        if (msg.range < MINRANGE)
+			Stop();
 }
 
-// publie les efforts desires aux moteurs
-void MoveMgr::publish(float leftEffort, float rightEffort) {
-        this->desiredLeftEffort = leftEffort;
-        this->desiredRightEffort = rightEffort;
+bool	MoveMgr::HasGoalSet()	const { return m_bHasGoal;		}
+float	MoveMgr::GetLeftPos()	const { return m_fLeftPosition;		}
+float	MoveMgr::GetRightPos()	const { return m_fRightPosition;	}
+
+void MoveMgr::Publish(float fLeftEffort, float fRightEffort) {
+        m_fDesiredLeftEffort	= fLeftEffort;
+        m_fDesiredRightEffort	= fRightEffort;
 
         nxt_msgs::JointCommand leftCommand = nxt_msgs::JointCommand();
         nxt_msgs::JointCommand rightCommand = nxt_msgs::JointCommand();
 
-        leftCommand.name = this->getNameLeftMotor();
-        leftCommand.effort = leftEffort;
+        leftCommand.name	= GetNameLeftMotor();
+        leftCommand.effort	= fLeftEffort;
 
-        rightCommand.name = this->getNameRightMotor();
-        rightCommand.effort = rightEffort;
+        rightCommand.name	= GetNameRightMotor();
+        rightCommand.effort	= fRightEffort;
 
-	this->publisher->publish(leftCommand);
-        this->publisher->publish(rightCommand);
-
+		if (CheckPublisher())
+		{
+			m_pPublisher->publish(leftCommand);
+			m_pPublisher->publish(rightCommand);
+		}
 }
 
-// verifie si les moteurs ont atteint les positions desirees
-void MoveMgr::checkGoal() {
-        if (this->hasGoal) {
-                bool left = false;
-                bool right = false;
-                if (this->leftEffort == this->desiredLeftEffort)
-                        left = checkLeftGoal();
-                if (this->rightEffort == this->desiredRightEffort)
-                        right = checkRightGoal();
+void MoveMgr::CheckGoal() {
+	if (m_bHasGoal) {
+		bool bLeft = false;
+		bool bRight = false;
+	
+		if (m_fLeftEffort == m_fDesiredLeftEffort)
+			bLeft = CheckLeftGoal();
+		
+		if (m_fRightEffort == m_fDesiredRightEffort)
+			bRight = CheckRightGoal();
 
-                if (right || left)
-                        this->publish(this->desiredLeftEffort, this->desiredRightEffort);
+		if (bRight || bLeft)
+			Publish(m_fDesiredLeftEffort, m_fDesiredRightEffort);
 
-                if (this->desiredLeftEffort == 0 && this->desiredRightEffort == 0)
-                        this->hasGoal = false;
-        }
+		if (m_fDesiredLeftEffort == 0.0f && m_fDesiredRightEffort == 0.0f)
+			m_bHasGoal = false;
+	}
 }
 
-// verifie si le moteur gauche a atteint la position desiree
-bool MoveMgr::checkLeftGoal() {
-        if ((this->leftEffort > 0 && this->desiredLeftPosition <= this->leftPosition) ||
-            (this->leftEffort < 0 && this->desiredLeftPosition >= this->leftPosition)) {
-                this->desiredLeftEffort = 0;
-                return true;
-        }
-        return false;
+bool MoveMgr::CheckLeftGoal() {
+	bool bRet = false;
+
+	if (
+		(
+			(m_fLeftEffort > 0)							&& 
+			(m_fDesiredLeftPosition <= m_fLeftPosition))
+			||
+		(
+			(m_fLeftEffort < 0)							&&
+			(m_fDesiredLeftPosition >= m_fLeftPosition)
+		)
+		) 
+	{
+		m_fDesiredLeftEffort = 0.0f;
+		bRet = true;
+	}
+	
+	return bRet;
 }
 
-// verifie si le moteur droit a atteint la position desiree
-bool MoveMgr::checkRightGoal() {
-        if ((this->rightEffort > 0 && this->desiredRightPosition <= this->rightPosition) ||
-            (this->rightEffort < 0 && this->desiredRightPosition >= this->rightPosition)) {
-                this->desiredRightEffort = 0;
-                return true;
-        }
-        return false;
+bool MoveMgr::CheckRightGoal() {
+	bool bRet = false;
+
+	if (
+		(
+			(m_fRightEffort > 0)							&& 
+			(m_fDesiredRightPosition <= m_fRightPosition))
+			||
+		(
+			(m_fRightEffort < 0)							&&
+			(m_fDesiredRightPosition >= m_fRightPosition)
+		)
+		) 
+	{
+		m_fDesiredRightEffort = 0.0f;
+		bRet = true;
+	}
+	
+	return bRet;
 }
 
-// Getters
-bool MoveMgr::hasGoalSet()	{ return this->hasGoal; }
-float MoveMgr::getLeftPos()	{ return this->leftPosition; }
-float MoveMgr::getRightPos()	{ return this->rightPosition; }
+bool MoveMgr::CheckPublisher() {
+	bool bRet = true;
+
+	if (!m_pPublisher) {
+		ROS_ERROR("Publisher is NULL.");
+		bRet = false;
+	}
+
+	return bRet;
+}

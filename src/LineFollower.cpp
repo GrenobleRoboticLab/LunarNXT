@@ -1,53 +1,55 @@
-#include "lunarNXT/LineFollower.h"
-#include "lunarNXT/Tools.h"
+#include "LunarNXT/LineFollower.h"
+#include "LunarNXT/Tools.h"
 
 using namespace Lunar_lib;
 
 // Constructeurs
-LineFollower::LineFollower() : Mode() { }
-
-LineFollower::LineFollower(MoveMgr* mm) : Mode(mm) {
-	this->online = false;
-	this->orientation = Map::WEST;
-
+LineFollower::LineFollower() : Mode() { 
+	m_bOnline = false;
+	m_wOrientation = Map::WEST;
 }
 
 // Mise a jour du capteur de couleurs
-void LineFollower::updateColor(nxt_msgs::Color msg) {
-	this->colorMsg = msg;
-	if (this->isInitialized()) {
-		this->treat();
+void LineFollower::UpdateColor(nxt_msgs::Color msg) {
+	m_ColorMsg = msg;
+	if (IsInitialized()) {
+		Treat();
 	}
-	else if (this->isLaunched()) {
-		this->count = 0;
-		this->setInitialized(true);
-		this->online = true;
+	else if (IsLaunched()) {
+		m_nCount = 0;
+		SetInitialized(true);
+		m_bOnline = true;
 	}
 }
 
 // Traitement du mode
-void LineFollower::treat() {
-	if(Tools::is_line_color(this->colorMsg)) {
-		this->getMm()->stop();
-		this->online = true;
-		this->getMm()->linearMove(0.8);
+void LineFollower::Treat() {
+	if(Tools::is_line_color(m_ColorMsg)) {
+		m_bOnline = true;
+		if (CheckMoveManager()) {
+			((MoveMgr*)*m_ppMoveManager)->Stop();
+			((MoveMgr*)*m_ppMoveManager)->LinearMove(0.8);
+		}
 	}
 	else {
-		if (this->online) {
-        		this->getMm()->turn(BASE_EFFORT, ((this->orientation-2)*0.4));
-                        this->count++;
-                	this->online = false;
+		if (m_bOnline) {
+			m_nCount++;
+			m_bOnline = false;
+			if (CheckMoveManager())
+				((MoveMgr*)*m_ppMoveManager)->Turn(BASE_EFFORT, ((m_wOrientation-2)*0.4));
 		}
-                else if(!this->getMm()->hasGoalSet()) {
-                        this->getMm()->turn(BASE_EFFORT, -(this->orientation-2)*0.8);
-			this->count++;
-			this->orientation = (Map::Cardinal)((this->orientation+2)%4);
+		else if(((MoveMgr*)*m_ppMoveManager)->HasGoalSet()) {
+			m_nCount++;
+			m_wOrientation = (Map::Cardinal)((m_wOrientation+2)%4);
+			if (CheckMoveManager())
+				((MoveMgr*)m_ppMoveManager)->Turn(BASE_EFFORT, -(m_wOrientation-2)*0.8);
 		}
-		if (count > 2) {
-			this->getMm()->linearMove(BASE_EFFORT, 1);
-			this->count = 0;
+		if (m_nCount > 2) {
+			m_nCount = 0;
+			if (CheckMoveManager())
+				((MoveMgr*)*m_ppMoveManager)->LinearMove(BASE_EFFORT, 1);
 		}
 	}
 }
 
-void LineFollower::setOrientation(Map::Cardinal orientation) { this->orientation = orientation; }
+void LineFollower::SetOrientation(Map::Cardinal orientation) { m_wOrientation = orientation; }

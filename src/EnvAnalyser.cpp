@@ -1,141 +1,186 @@
-#include <list>
-#include "lunarNXT/EnvAnalyser.h"
-#include "lunarNXT/LineFollower.h"
-#include "lunarNXT/LabySolver.h"
+#include "LunarNXT/EnvAnalyser.h"
+#include "LunarNXT/LineFollower.h"
 
 using namespace Lunar_lib;
-// Constructeurs
-EnvAnalyser::EnvAnalyser() { ; }
-EnvAnalyser::EnvAnalyser(ros::Publisher* pub) {
-	this->mm = new MoveMgr(pub, "motor_l", "motor_r");
-	this->mode = new Navigator(mm, new LineFollower(mm));
+
+EnvAnalyser::EnvAnalyser() { 
+	m_pMoveManager	= NULL;
+	m_pMode			= NULL;
 }
 
-// destructeur
-EnvAnalyser::~EnvAnalyser() { ; }
-
-// Callback du topic JointState
-// Met a jour le MoveMgr
-void EnvAnalyser::motorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
-	// clone des variables
-	sensor_msgs::JointState _msg = sensor_msgs::JointState();
-	_msg.name = msg->name;
-	_msg.position = msg->position;
-	_msg.effort = msg->effort;
-
-	// update MoveMgr
-	this->mm->updateMotors(_msg);
-
-	// threads
-	// pthread_create(&threads[0], NULL, &EnvAnalyser::motorsT, new EnvAnalyser::processEventArgs(this->mode, this->mm, &_msg, MOTOR));
+EnvAnalyser::~EnvAnalyser() 
+{ 
+	ReleaseMode();
+	ReleaseMoveManager();
 }
 
-// Callback du capteur de contact droit
-// met a jour le mode
-void EnvAnalyser::rightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
-	nxt_msgs::Contact _msg = nxt_msgs::Contact();
-	_msg.contact = msg->contact;
-	this->mode->updateRightTouch(_msg);
-}
-
-// Callback du capteur de contact gauche
-// met a jour le mode
-void EnvAnalyser::leftTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
-        nxt_msgs::Contact _msg = nxt_msgs::Contact();
-        _msg.contact = msg->contact;
-	this->mode->updateLeftTouch(_msg);
-}
-
-
-// Callback du capteur de couleur
-// Met a jour le mode
-void EnvAnalyser::colorCallback(const nxt_msgs::Color::ConstPtr& msg) {
-	nxt_msgs::Color _msg = nxt_msgs::Color();
-	_msg.r = msg->r;
-	_msg.g = msg->g;
-	_msg.b = msg->b;
-
-	this->mode->updateColor(_msg);
-}
-
-// Callback du capteur a ultrason
-// met a jour le MoveMgr et le mode
-void EnvAnalyser::ultrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
-	nxt_msgs::Range _msg = nxt_msgs::Range();
-	_msg.range = msg->range;
-	_msg.range_min = msg->range_min;
-	_msg.range_max = msg->range_max;
-	_msg.spread_angle = msg->spread_angle;
-
-	this->mm->updateRange(_msg);
-	this->mode->updateRange(_msg);
-}
-
-// Callback de l'interface utilisateur
-// donne des ordres au mode ou au MoveMgr (controle manuel ou non)
-void EnvAnalyser::uiCallback(const lunarNXT::Order::ConstPtr& msg) {
-	if (msg->order == "go")
-		this->mm->linearMove(BASE_EFFORT);
-	else if (msg->order == "back")
-                this->mm->linearMove(-BASE_EFFORT);
-	else if (msg->order == "stop")
-                this->mm->stop();
-	else if (msg->order == "turn_l")
-		this->mm->turnAround(BASE_EFFORT, 3);
-	else if (msg->order == "turn_r")
-		this->mm->turnAround(BASE_EFFORT, -3);
-	else if (msg->order == "line") {
-		this->mode->launch();
-		std::list<Map::Choice> choices = std::list<Map::Choice>();
-		choices.push_back(Map::AHEAD);
-                choices.push_back(Map::AHEAD);
-                choices.push_back(Map::AHEAD);
-                choices.push_back(Map::LEFT);
-                choices.push_back(Map::RIGHT);
-                choices.push_back(Map::LEFT);
-                choices.push_back(Map::AHEAD);
-                choices.push_back(Map::LEFT);
-                choices.push_back(Map::RIGHT);
-                choices.push_back(Map::LEFT);
-                choices.push_back(Map::AHEAD);
-                choices.push_back(Map::AHEAD);
-                choices.push_back(Map::AHEAD);
-                choices.push_back(Map::LEFT);
-		((Navigator*)this->mode)->init(choices);
-	}
-	else if (msg->order == "no_line")
-		this->mode->unlaunch();
-}
-
-// threads
-/*
-void *EnvAnalyser::motorsT(void* msg) {
-	EnvAnalyser::processEventArgs* arg =  (EnvAnalyser::processEventArgs*)msg;
+bool EnvAnalyser::Init(ros::Publisher* pPublisher, const std::string & sLMotorName, const std::string & sRMotorName) {
+	bool bRet = false;
 	
-	switch (arg->id_thread) {
-		case MOTOR:
-			arg->recs[0]->updateMotors(*(sensor_msgs::JointState*)arg->msg);
-			arg->recs[1]->updateMotors(*(sensor_msgs::JointState*)arg->msg);
-			break;
-		case COLOR:
-			arg->recs[0]->updateColor(*(nxt_msgs::Color*)arg->msg);
-                        arg->recs[1]->updateColor(*(nxt_msgs::Color*)arg->msg);
-			break;
-		case TOUCH_L:
-			arg->recs[0]->updateLeftTouch(*(nxt_msgs::Contact*)arg->msg);
-                        arg->recs[1]->updateLeftTouch(*(nxt_msgs::Contact*)arg->msg);
-			break;
-		case TOUCH_R:
-			arg->recs[0]->updateRightTouch(*(nxt_msgs::Contact*)arg->msg);
-                        arg->recs[1]->updateRightTouch(*(nxt_msgs::Contact*)arg->msg);
-			break;
-		case ULTRASONIC:
-			arg->recs[0]->updateRange(*(nxt_msgs::Range*)arg->msg);
-                        arg->recs[1]->updateRange(*(nxt_msgs::Range*)arg->msg);
-			break;
-		default: break;
-	}
+	m_pMoveManager	= new MoveMgr(sLMotorName, sRMotorName);
 	
-	pthread_exit(NULL);
+	if (CheckMoveManager() && pPublisher)
+		bRet = m_pMoveManager->Init(pPublisher);
+	else
+		ReleaseMoveManager();
+
+	return bRet;
 }
-*/
+
+void EnvAnalyser::MotorCallback(const sensor_msgs::JointState::ConstPtr& msg) {
+	sensor_msgs::JointState	tempMsg;
+
+	tempMsg.name		= msg->name;
+	tempMsg.position	= msg->position;
+	tempMsg.effort		= msg->effort;
+
+	if (CheckMoveManager())
+		m_pMoveManager->UpdateMotors(tempMsg);
+}
+
+void EnvAnalyser::RightTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
+	nxt_msgs::Contact	tempMsg;
+
+	tempMsg.contact = msg->contact;
+
+	if (CheckMode())
+		m_pMode->UpdateRightTouch(tempMsg);
+}
+
+void EnvAnalyser::LeftTouchCallback(const nxt_msgs::Contact::ConstPtr& msg) {
+	nxt_msgs::Contact tempMsg;
+	
+	tempMsg.contact = msg->contact;
+
+	if (CheckMode())
+		m_pMode->UpdateLeftTouch(tempMsg);
+}
+
+
+void EnvAnalyser::ColorCallback(const nxt_msgs::Color::ConstPtr& msg) {
+	nxt_msgs::Color tempMsg;
+
+	tempMsg.r = msg->r;
+	tempMsg.g = msg->g;
+	tempMsg.b = msg->b;
+
+	if (CheckMode())
+		m_pMode->UpdateColor(tempMsg);
+}
+
+void EnvAnalyser::UltrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
+	nxt_msgs::Range tempMsg;
+
+	tempMsg.range			= msg->range;
+	tempMsg.range_min		= msg->range_min;
+	tempMsg.range_max		= msg->range_max;
+	tempMsg.spread_angle	= msg->spread_angle;
+
+	if (CheckMoveManager())
+		m_pMoveManager->UpdateRange(tempMsg);
+
+	if (CheckMode())
+		m_pMode->UpdateRange(tempMsg);
+}
+
+void EnvAnalyser::UiCallback(const LunarNXT::Order::ConstPtr& msg) {
+	if (msg->sOrder == "go")
+	{
+		if (CheckMoveManager())
+			m_pMoveManager->LinearMove(BASE_EFFORT);
+	}
+	else if (msg->sOrder == "back")
+	{
+		if (CheckMoveManager())
+			m_pMoveManager->LinearMove(-BASE_EFFORT);
+	}
+	else if (msg->sOrder == "stop")
+    {
+		if (CheckMoveManager())
+			m_pMoveManager->Stop();
+	}
+	else if (msg->sOrder == "turn_l")
+	{
+		if (CheckMoveManager())
+			m_pMoveManager->TurnLeft(BASE_EFFORT);
+	}
+	else if (msg->sOrder == "turn_r")
+	{
+		if (CheckMoveManager())
+			m_pMoveManager->TurnRight(BASE_EFFORT);
+	}
+	else if (msg->sOrder == "launch")
+		LaunchMode(msg->nEnum);
+	else if (msg->sOrder == "unlaunch")
+		KillMode();
+}
+
+void EnvAnalyser::LaunchMode(int nEnum) {
+	if (CheckMode())
+		ROS_ERROR("One mode is currently active. Kill it before");
+	else {
+		ReleaseMode();
+
+		switch (nEnum) {
+		case 0:
+			ROS_ERROR("No choice have been set yet.");
+		default:
+			m_pMode = new LineFollower();
+			break;
+		};
+
+		if (CheckMode() && CheckMoveManager())
+		{
+			m_pMode->SetMoveManager(&m_pMoveManager);
+			m_pMode->Launch();
+			ROS_INFO("Mode launched.");
+		}
+		else
+			ReleaseMode();
+	}
+}
+
+void EnvAnalyser::KillMode() {
+	if (CheckMode())
+		m_pMode->Unlaunch();
+	ReleaseMode();
+
+	if (CheckMode())
+		ROS_ERROR("Mode still runing, you may have to try again.");
+	else
+		ROS_INFO("Mode killed.");
+}
+
+void EnvAnalyser::ReleaseMode() {
+	if (m_pMode)
+		delete m_pMode;
+	m_pMode = NULL;
+}
+
+void EnvAnalyser::ReleaseMoveManager() {
+	if (m_pMoveManager)
+		delete m_pMoveManager;
+	m_pMode = NULL;
+}
+
+bool EnvAnalyser::CheckMoveManager() {
+	bool bRet = true;
+
+	if (!m_pMoveManager) {
+		ROS_ERROR("MoveManager is NULL.");
+		bRet = false;
+	}
+
+	return bRet;
+}
+
+bool EnvAnalyser::CheckMode() {
+	bool bRet = true;
+
+	if (!m_pMode) {
+		ROS_ERROR("MoveManager is NULL.");
+		bRet = false;
+	}
+
+	return bRet;
+}

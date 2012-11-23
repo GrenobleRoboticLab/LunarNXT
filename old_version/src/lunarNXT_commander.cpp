@@ -3,7 +3,7 @@
 #include <termios.h>
 #include <stdio.h>
 
-#include "LunarNXT/Order.h"
+#include "lunarNXT/Order.h"
 
 #define KEYCODE_A 'a'
 #define KEYCODE_D 'd'
@@ -25,7 +25,7 @@ private:
 };
 
 Commander::Commander() {
-	commander_pub = n.advertise<LunarNXT::Order>("ui_publish", 5);
+	commander_pub = n.advertise<lunarNXT::Order>("ui_publish", 5);
 }
 
 int kfd = 0;
@@ -56,7 +56,7 @@ void Commander::keyLoop() {
 
 	for(;;) {
 		// get the next event from the keyboard  
-		LunarNXT::Order msg;
+		lunarNXT::Order msg = lunarNXT::Order();
   	
 		if(read(kfd, &c, 1) < 0) {
 			perror("read():");
@@ -68,31 +68,31 @@ void Commander::keyLoop() {
 		switch(c) {
 			case KEYCODE_Q:
 				ROS_INFO("Turn Left !");
-				msg.sOrder = "turn_l";
+				msg.order = "turn_l";
 			        break;
 			case KEYCODE_D:
 				ROS_INFO("Turn Right !");
-				msg.sOrder = "turn_r";
+				msg.order = "turn_r";
 				break;
 			case KEYCODE_Z:
 				ROS_INFO("Go !");
-				msg.sOrder = "go";
+				msg.order = "go";
 			        break;
 			case KEYCODE_S:
 				ROS_INFO("Back !");
-				msg.sOrder = "back";
+				msg.order = "back";
 				break;
 			case KEYCODE_A:
 				ROS_INFO("Stop !");
-				msg.sOrder = "stop";
+				msg.order = "stop";
 				break;
 			case KEYCODE_L:
 				ROS_INFO("LineLauncher");
-				msg.sOrder = "launch";
+				msg.order = "line";
 				break;
 			case KEYCODE_M:
 				ROS_INFO("LineUnLauncher");
-				msg.sOrder = "unlaunch";
+				msg.order = "no_line";
 				break;
 		}
 

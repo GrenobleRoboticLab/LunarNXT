@@ -1,100 +1,106 @@
-#include "lunarNXT/LineFinder.h"
-#include "lunarNXT/Tools.h"
+#include "LunarNXT/LineFinder.h"
+#include "LunarNXT/Tools.h"
 
 using namespace Lunar_lib;
 
-LineFinder::LineFinder() : Mode() { ; }
+LineFinder::LineFinder() : Mode() { m_nState = 0; }
 
-LineFinder::LineFinder(MoveMgr* mm) : Mode(mm) {
-	this->state = 0;
-}
-
-void LineFinder::updateColor(nxt_msgs::Color msg) { 
-	this->colorMsg = msg;
-	if (this->isLaunched()) {
-		this->treat();
+void LineFinder::UpdateColor(nxt_msgs::Color msg) { 
+	m_ColorMsg = msg;
+	if (IsLaunched() && IsInitialized()) {
+		Treat();
 	}
 }
 
-void LineFinder::treat() {
-	if (Tools::is_line_color(colorMsg)) {
-		if(this->state < 3) {
-			this->element->appendElement(this->state+1);	
-			switch(this->state) {
+void LineFinder::Treat() {
+	if (CheckMoveManager()) {
+		if (Tools::is_line_color(m_ColorMsg)) {
+			if(m_nState < 3) {
+				if (CheckLabyElement())
+					m_pLabyElement->AppendElement(m_nState+1);	
+				switch(m_nState) {
+				case 0:
+					((MoveMgr*)*m_ppMoveManager)->TurnLeft(BASE_EFFORT);
+					m_nState = 3;
+					break;
+				case 1:
+					((MoveMgr*)*m_ppMoveManager)->LinearMove(BASE_EFFORT);
+					m_nState = 3;
+					break;
+				case 2:
+					((MoveMgr*)*m_ppMoveManager)->TurnRight(BASE_EFFORT);
+					m_nState = 3;
+					break;	
+				}
+			}
+		}
+		else if(Tools::is_pastille_color(m_ColorMsg)) {
+			m_bLineNotFound = false;
+			switch(m_nState) {
 			case 0:
-				this->getMm()->turnLeft(BASE_EFFORT);
-				this->state = 3;
+				m_fLPos = ((MoveMgr*)*m_ppMoveManager)->GetLeftPos();
+				m_fRPos = ((MoveMgr*)*m_ppMoveManager)->GetRightPos();
+				((MoveMgr*)*m_ppMoveManager)->TurnLeft(BASE_EFFORT);
 				break;
 			case 1:
-				this->getMm()->linearMove(BASE_EFFORT);
-				this->state = 3;
+				m_fLPos = ((MoveMgr*)*m_ppMoveManager)->GetLeftPos();
+				m_fRPos = ((MoveMgr*)*m_ppMoveManager)->GetRightPos();
+				((MoveMgr*)*m_ppMoveManager)->LinearMove(BASE_EFFORT);
 				break;
 			case 2:
-				this->getMm()->turnRight(BASE_EFFORT);
-				this->state = 3;
-				break;	
+				m_fLPos = ((MoveMgr*)*m_ppMoveManager)->GetLeftPos();
+				m_fRPos = ((MoveMgr*)*m_ppMoveManager)->GetRightPos();
+				((MoveMgr*)*m_ppMoveManager)->TurnRight(BASE_EFFORT);
+				break;
+			case 3:
+				Unlaunch();
+				break;
+			default: break;
+			}
+		}
+		else if(Tools::is_ground_color(m_ColorMsg) && !m_bLineNotFound && CheckDist(1)){
+			switch(m_nState) {
+			case 0:
+				m_nState++;
+				m_bLineNotFound = true;
+				((MoveMgr*)*m_ppMoveManager)->TurnRight(BASE_EFFORT);
+				break;
+			case 1:
+				m_nState++;			
+				m_bLineNotFound = true;
+				((MoveMgr*)*m_ppMoveManager)->LinearMove(-BASE_EFFORT);
+				break;
+			case 2:
+				m_nState++;
+				m_bLineNotFound = true;
+				((MoveMgr*)*m_ppMoveManager)->TurnLeft(BASE_EFFORT);
+				break;
+			default: 
+				break;
 			}
 		}
 	}
-	else if(Tools::is_pastille_color(colorMsg)) {
-		this->lineNotFound = false;
-		switch(this->state) {
-		case 0:
-			this->leftPosition = this->getMm()->getLeftPos();
-			this->rightPosition = this->getMm()->getRightPos();
-			this->getMm()->turnLeft(BASE_EFFORT);
-			break;
-		case 1:
-			this->leftPosition = this->getMm()->getLeftPos();
-			this->rightPosition = this->getMm()->getRightPos();
-			this->getMm()->linearMove(BASE_EFFORT);
-			break;
-		case 2:
-			this->leftPosition = this->getMm()->getLeftPos();
-			this->rightPosition = this->getMm()->getRightPos();
-			this->getMm()->turnRight(BASE_EFFORT);
-			break;
-		case 3:
-			this->unlaunch();
-			break;
-
-		default: break;
-		}
-	}
-	else if(Tools::is_ground_color(colorMsg) && !lineNotFound && checkDist(1)){
-		switch(this->state) {
-		case 0:
-			this->state++;
-			//on pourra supprimer la ligne ci dessous en faisant le test de Linenotfound sur element state[i];	
-			this->lineNotFound = true;
-			this->getMm()->turnRight(BASE_EFFORT);
-			break;
-		case 1:
-			this->state++;			
-			this->lineNotFound = true;
-			this->getMm()->linearMove(-BASE_EFFORT);
-			break;
-		case 2:
-			this->state++;
-			this->lineNotFound = true;
-			this->getMm()->turnLeft(BASE_EFFORT);
-			break;
-		default: 
-			break;
-		}
-	}
-
 }
 
-bool LineFinder::checkDist(int dist) {
-	if (	(this->getMm()->getLeftPos() - this->leftPosition > dist) || 
-		(this->getMm()->getRightPos() - this->rightPosition > dist)) {
+bool LineFinder::CheckDist(int dist) {
+	if (	(((MoveMgr*)*m_ppMoveManager)->GetLeftPos() - m_fLPos > dist) || 
+		(((MoveMgr*)*m_ppMoveManager)->GetRightPos() - m_fRPos > dist)) {
 		return true;
 	}
 	return false;
 }
 
-void LineFinder::init(LabyElement* element) { 
-	this->element = element;
-	this->setInitialized(true);
+void LineFinder::Init(LabyElement* element) { 
+	m_pLabyElement = element;
+	SetInitialized(true);
+}
+
+bool LineFinder::CheckLabyElement() {
+	bool bRet = true;
+
+	if (!m_pLabyElement) {
+		ROS_ERROR("LabyElement is null.");
+	}
+
+	return bRet;
 }

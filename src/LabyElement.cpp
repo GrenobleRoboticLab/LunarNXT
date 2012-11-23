@@ -1,38 +1,58 @@
-#include "lunarNXT/LabyElement.h"
+#include "LunarNXT/LabyElement.h"
 
 using namespace Lunar_lib;
 
-LabyElement::LabyElement() { ; }
-
-LabyElement::LabyElement(LabyElement* prev) {
-	this->ways[0] = prev;
-	for (int i = 1; i < 4; i++) this->ways[i] = NULL;
-	this->visited = 0;
+LabyElement::LabyElement() { 
+    for (int i = 0; i < 4; i++)
+        m_pWays[i] = NULL;
+	m_nVisiteCount = 0;
 }
 
 LabyElement::~LabyElement() {
-	for (int i = 1; i < 4; i++) delete this->ways[i];
+	for (int i = 1; i < 4; i++)
+	{
+	    if(m_pWays[i])
+	        delete m_pWays[i];
+	}
 }
 
-Map::Choice LabyElement::getLeftChoice(LabyElement *current) {
-	int tempVisit = this->visited;
-	int ret = 3;
+void LabyElement::SetPrev(LabyElement* pPrev) {
+    if (!m_pWays[0])
+	    m_pWays[0] = pPrev;
+}
+
+Map::Choice LabyElement::GetLeftChoice(LabyElement** ppCurrent) {
+	int nTempVisitCount = m_nVisiteCount;
+	int nRet = 3;
 	int i = 0;
 
-	while (ret == 3) {
-		if (this->ways[(this->visited+i) % 4] != NULL && this->ways[(visited+i) % 4]->getVisited() == 0) {
-			ret -= (4-i);
-			current = ways[(this->visited+i) % 4];
+	while (nRet == 3) {
+		if (m_pWays[(m_nVisiteCount+i) % 4] != NULL && m_pWays[(m_nVisiteCount+i) % 4]->GetVisited() == 0) {
+			nRet -= (4-i);
+			if(ppCurrent)
+				*ppCurrent = m_pWays[(m_nVisiteCount+i) % 4];
 		}
-		else if (ways[(this->visited+i) % 4] == NULL) tempVisit++;
+		else if (m_pWays[(m_nVisiteCount+i) % 4] == NULL)
+		    nTempVisitCount++;
 		i++;
 	}
-	this->visited = tempVisit;
-	return (Map::Choice)(-ret);
+	
+	m_nVisiteCount = nTempVisitCount;
+	
+	return (Map::Choice)(-nRet);
 }
 
-int LabyElement::getVisited() { return this->visited; }
-void LabyElement::addVisit() { this->visited++; }
+int LabyElement::GetVisited()   { return m_nVisiteCount; }
+void LabyElement::AddVisit()    { m_nVisiteCount++; }
 
-void LabyElement::appendElement(int index) { this->ways[index] = new LabyElement(this); }
-LabyElement* LabyElement::getElement(int index) { return this->ways[index]; }
+void LabyElement::AppendElement(int index) {
+    LabyElement*    pElement = new LabyElement();
+    
+    if (pElement)
+    {
+        pElement->SetPrev(this);
+        m_pWays[index] = pElement; 
+    }
+}
+
+LabyElement* LabyElement::GetElement(int index) { return m_pWays[index]; }
