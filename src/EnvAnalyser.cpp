@@ -5,7 +5,7 @@ using namespace Lunar_lib;
 
 EnvAnalyser::EnvAnalyser() { 
 	m_pMoveManager	= NULL;
-	m_pMode			= NULL;
+	m_pMode		= NULL;
 }
 
 EnvAnalyser::~EnvAnalyser() 
@@ -16,7 +16,7 @@ EnvAnalyser::~EnvAnalyser()
 
 bool EnvAnalyser::Init(ros::Publisher* pPublisher, const std::string & sLMotorName, const std::string & sRMotorName) {
 	bool bRet = false;
-	
+
 	m_pMoveManager	= new MoveMgr(sLMotorName, sRMotorName);
 	
 	if (CheckMoveManager() && pPublisher)
@@ -178,7 +178,7 @@ bool EnvAnalyser::CheckMode() {
 	bool bRet = true;
 
 	if (!m_pMode) {
-		ROS_ERROR("MoveManager is NULL.");
+		// ROS_ERROR("Mode is NULL.");
 		bRet = false;
 	}
 
