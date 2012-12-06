@@ -84,7 +84,8 @@ void EnvAnalyser::UltrasonicCallback(const nxt_msgs::Range::ConstPtr& msg) {
 }
 
 void EnvAnalyser::UiCallback(const LunarNXT::Order::ConstPtr& msg) {
-	if (msg->sOrder == "go")
+	
+        if (msg->sOrder == "go")
 	{
 		if (CheckMoveManager())
 			m_pMoveManager->LinearMove(BASE_EFFORT);
@@ -95,7 +96,7 @@ void EnvAnalyser::UiCallback(const LunarNXT::Order::ConstPtr& msg) {
 			m_pMoveManager->LinearMove(-BASE_EFFORT);
 	}
 	else if (msg->sOrder == "stop")
-    {
+        {
 		if (CheckMoveManager())
 			m_pMoveManager->Stop();
 	}
