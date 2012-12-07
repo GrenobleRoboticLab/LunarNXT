@@ -33,7 +33,7 @@ nxt_robot:
     spread_angle: 0.2
     min_range: 0.01
     max_range: 2.5
-    desired_frequency: 2.0
+    desired_frequency: 1.0
 
   - type: color
     port: PORT_4
